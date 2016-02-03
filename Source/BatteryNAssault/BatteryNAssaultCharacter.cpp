@@ -124,4 +124,10 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+
+}
+
+void ThisIsaTest()
+{
+	//this function is a test it is not important
 }
