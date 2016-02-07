@@ -1,6 +1,7 @@
 // Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "GameFramework/Character.h"
+#include "Weapon.h"
 #include "BatteryNAssaultCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -18,6 +19,8 @@ class ABatteryNAssaultCharacter : public ACharacter
 public:
 	ABatteryNAssaultCharacter();
 
+	virtual void BeginPlay() override;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -25,6 +28,9 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(EditAnywhere)
+		AWeapon* Weapon;
 
 protected:
 
@@ -34,7 +40,16 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	void ThisIsaTest();
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AWeapon> Gun;
+
+	UFUNCTION()
+		virtual void StartFire();
+
+	UFUNCTION()
+		virtual void StopFire();
+
+	
 
 	/** 
 	 * Called via input to turn at a given rate. 

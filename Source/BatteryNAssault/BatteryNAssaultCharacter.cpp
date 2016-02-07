@@ -8,6 +8,17 @@
 
 ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 {
+	struct FConstructorStatics
+	{
+		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
+	};
+	static FConstructorStatics ConstructorStatics;
+
+	if (ConstructorStatics.MachineGun.Object)
+	{
+		Gun = Cast<UClass>(ConstructorStatics.MachineGun.Object);
+	}
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -40,6 +51,23 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
+void ABatteryNAssaultCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	SpawnParameters.Instigator = this;
+	AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(Gun, SpawnParameters);
+	if (Spawn)
+	{
+		Spawn->AttachRootComponentTo(GetMesh(),"WeaponSocket", EAttachLocation::SnapToTarget);
+		Weapon = Spawn;
+		
+		
+
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -65,6 +93,17 @@ void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent*
 	// handle touch devices
 	InputComponent->BindTouch(IE_Pressed, this, &ABatteryNAssaultCharacter::TouchStarted);
 	InputComponent->BindTouch(IE_Released, this, &ABatteryNAssaultCharacter::TouchStopped);
+
+	InputComponent->BindAction(TEXT("Fire"),
+		IE_Pressed,
+		this,
+		&ABatteryNAssaultCharacter::StartFire);
+
+	InputComponent->BindAction(TEXT("Fire"),
+		IE_Released,
+		this,
+		&ABatteryNAssaultCharacter::StopFire);
+	
 }
 
 
@@ -127,7 +166,15 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 
 }
 
-void ThisIsaTest()
+void ABatteryNAssaultCharacter::StartFire()
 {
-	//this function is a test it is not important
+	
+	Weapon->StartAttack();
 }
+
+void ABatteryNAssaultCharacter::StopFire()
+{
+	Weapon->EndAttack();
+}
+
+
