@@ -1,0 +1,40 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "AIController.h"
+
+/* AI Specific includes */
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
+#include "MechAIController.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class BATTERYNASSAULT_API AMechAIController : public AAIController
+{
+	GENERATED_BODY()
+
+
+	AMechAIController(const class FObjectInitializer& ObjectInitializer);
+	
+	/* Called whenever the controller possesses a character bot */
+	virtual void Possess(class APawn* InPawn) override;
+
+	virtual void UnPossess() override;
+
+	UBehaviorTreeComponent* BehaviorComp;
+
+	UBlackboardComponent* BlackboardComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName TargetEnemyKeyName;
+
+public:
+	void SetTargetEnemy(APawn* NewTarget);
+	
+};
