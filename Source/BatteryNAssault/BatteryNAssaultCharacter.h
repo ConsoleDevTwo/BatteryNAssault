@@ -34,6 +34,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		AWeapon* Weapon;
 
+	UFUNCTION()
+	virtual void Recharge ( float charge );
+
 protected:
 
 	/** Called for forwards/backward input */

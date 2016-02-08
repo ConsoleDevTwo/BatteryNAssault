@@ -196,4 +196,11 @@ void ABatteryNAssaultCharacter::StopFire()
 	Weapon->EndAttack();
 }
 
+void ABatteryNAssaultCharacter::Recharge(float charge)
+{
+	//Energy += charge;
+	Energy = FMath::Clamp(Energy + charge, 0.0f, MaxEnergy);
 
+	FString Message = FString::Printf(TEXT("Charging"));
+	GEngine->AddOnScreenDebugMessage(4, 0.1f, FColor::White, Message);
+}

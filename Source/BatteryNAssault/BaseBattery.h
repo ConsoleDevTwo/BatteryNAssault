@@ -26,6 +26,9 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere)
+	float ChargeRange;
+
+	UPROPERTY(EditAnywhere)
 	float ChargePerSecond;
 
 	TArray<AActor *> gameMechs;
