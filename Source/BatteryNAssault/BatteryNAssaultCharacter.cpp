@@ -19,6 +19,11 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	{
 		Gun = Cast<UClass>(ConstructorStatics.MachineGun.Object);
 	}
+
+	EnergyCostPerSecond = 0.5f;
+	MaxEnergy = 100.f;
+	Energy = MaxEnergy;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -51,6 +56,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
+
 void ABatteryNAssaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -67,6 +73,19 @@ void ABatteryNAssaultCharacter::BeginPlay()
 		
 
 	}
+}
+
+void ABatteryNAssaultCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (Energy > 0)
+	{
+		Energy -= EnergyCostPerSecond * DeltaTime;
+	}
+
+	FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
+	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
 }
 
 //////////////////////////////////////////////////////////////////////////
