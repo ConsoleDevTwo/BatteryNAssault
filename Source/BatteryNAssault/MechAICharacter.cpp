@@ -4,8 +4,7 @@
 #include "MechAICharacter.h"
 #include "MechAIController.h"
 #include "BatteryNAssaultCharacter.h"
-
-
+#include <time.h>
 // AI include
 #include "Perception/PawnSensingComponent.h"
 
@@ -16,21 +15,33 @@ AMechAICharacter::AMechAICharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->SetPeripheralVisionAngle(60.0f);
 	PawnSensingComp->SightRadius = 2000;
 	PawnSensingComp->HearingThreshold = 600;
 	PawnSensingComp->LOSHearingThreshold = 1200;
+
+	m_CurrentWaypoint = NULL;
+	WaypointToPlayerDistance = 400.0f;
 }
 
 // Called when the game starts or when spawned
 void AMechAICharacter::BeginPlay()
 {
+	srand(time(NULL));
 	Super::BeginPlay();
+	FollowCamera->Deactivate();
+
+	// Get all the wander waypoints in the map
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWanderWaypoint::StaticClass(), m_Waypoints);
+
+	SelectWaypoint();
 
 	if (PawnSensingComp)
 	{
 		PawnSensingComp->OnSeePawn.AddDynamic(this, &AMechAICharacter::OnSeePlayer);
+		
 	}
 
 }
@@ -40,6 +51,11 @@ void AMechAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (m_CurrentWaypoint == NULL || FVector::Dist(GetTransform().GetTranslation(), m_CurrentWaypoint->GetTransform().GetTranslation()) <= WaypointToPlayerDistance)
+	{
+		SelectWaypoint();
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -50,6 +66,7 @@ void AMechAICharacter::SetupPlayerInputComponent(class UInputComponent* InputCom
 }
 
 
+// What the AI will do when it sees a player
 void AMechAICharacter::OnSeePlayer(APawn* Pawn)
 {
 	AMechAIController* MechAIController = Cast<AMechAIController>(GetController());
@@ -58,6 +75,24 @@ void AMechAICharacter::OnSeePlayer(APawn* Pawn)
 	{
 		MechAIController->SetTargetEnemy(Target);
 	}
+}
+
+void AMechAICharacter::SelectWaypoint()
+{
+	if (m_Waypoints.Num() <= 0)
+	{
+		return;
+	}
+
+	int32 randomNum = (rand() % m_Waypoints.Num());
+
+	AMechAIController* MechAIController = Cast<AMechAIController>(GetController());
+	if (MechAIController)
+	{
+			m_CurrentWaypoint = m_Waypoints[randomNum];
+			MechAIController->SetNextWaypoint(m_Waypoints[randomNum]);
+	}
+
 }
 
 

@@ -45,3 +45,11 @@ void AMechAIController::SetTargetEnemy(APawn* NewTarget)
 		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
 	}
 }
+
+void AMechAIController::SetNextWaypoint(AActor* NextWaypoint)
+{
+	if (BlackboardComp)
+	{
+		BlackboardComp->SetValueAsObject(WaypointTarget, NextWaypoint);
+	}
+}

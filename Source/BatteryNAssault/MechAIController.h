@@ -3,7 +3,6 @@
 #pragma once
 
 #include "AIController.h"
-
 /* AI Specific includes */
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -34,7 +33,12 @@ class BATTERYNASSAULT_API AMechAIController : public AAIController
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName TargetEnemyKeyName;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName WaypointTarget;
+
+
 public:
 	void SetTargetEnemy(APawn* NewTarget);
+	void SetNextWaypoint(AActor* NextWaypoint);
 	
 };
