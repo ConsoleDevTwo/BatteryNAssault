@@ -19,6 +19,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	{
 		Gun = Cast<UClass>(ConstructorStatics.MachineGun.Object);
 	}
+	//Temp->K2_SetWorldRotation(FollowCamera.)
 
 	EnergyCostPerSecond = 0.5f;
 	MaxEnergy = 100.f;
@@ -36,6 +37,9 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+
+
+
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
@@ -47,6 +51,11 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	CameraBoom->AttachTo(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+
+	Temp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Temp"));
+	Temp->AttachTo(RootComponent);
+
+
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -67,7 +76,8 @@ void ABatteryNAssaultCharacter::BeginPlay()
 	AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(Gun, SpawnParameters);
 	if (Spawn)
 	{
-		Spawn->AttachRootComponentTo(GetMesh(),"WeaponSocket", EAttachLocation::SnapToTarget);
+		//Spawn->AttachRootComponentTo(GetMesh(),"WeaponSocket", EAttachLocation::SnapToTarget);
+		Spawn->AttachRootComponentTo(Temp);
 		Weapon = Spawn;
 		
 		
@@ -86,6 +96,11 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 
 	FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
 	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
+	if (Temp->GetComponentRotation() != CameraBoom->GetComponentRotation())
+	{
+		FRotator currentCameraRotation = FMath::RInterpTo(Temp->GetComponentRotation(), CameraBoom->GetComponentRotation(), GetWorld()->GetDeltaSeconds(), 0.5f);
+		Temp->SetWorldRotation(currentCameraRotation);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

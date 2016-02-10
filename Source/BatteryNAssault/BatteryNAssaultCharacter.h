@@ -58,6 +58,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AWeapon> Gun;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UStaticMeshComponent* Temp;
+
 	UFUNCTION()
 		virtual void StartFire();
 
