@@ -20,6 +20,7 @@ void AMechAIController::Possess(class APawn* InPawn)
 	AMechAICharacter* MechAICharacter = Cast<AMechAICharacter>(InPawn);
 	if (MechAICharacter)
 	{
+		MyCharacter = MechAICharacter;
 		if (MechAICharacter->BehaviorTree->BlackboardAsset)
 		{
 			BlackboardComp->InitializeBlackboard(*MechAICharacter->BehaviorTree->BlackboardAsset);
@@ -52,4 +53,42 @@ void AMechAIController::SetNextWaypoint(AActor* NextWaypoint)
 	{
 		BlackboardComp->SetValueAsObject(WaypointTarget, NextWaypoint);
 	}
+}
+
+AActor* AMechAIController::GetCurrentWaypoint()
+{
+	if (BlackboardComp)
+	{
+		return Cast<AActor>(BlackboardComp->GetValueAsObject(WaypointTarget));
+	}
+	
+	return nullptr;
+}
+
+int8 AMechAIController::GetTeamID()
+{
+	if (BlackboardComp)
+	{
+		if (MyCharacter)
+		{
+			return MyCharacter->TeamID;
+		}
+	}
+
+	return NULL;
+}
+
+
+float AMechAIController::GetBatteryCharge()
+{
+
+	if (BlackboardComp)
+	{
+		if (MyCharacter)
+		{
+			return MyCharacter->GetEnergy();
+		}
+	}
+
+	return NULL;
 }

@@ -4,7 +4,8 @@
 #include "MechAICharacter.h"
 #include "MechAIController.h"
 #include "BatteryNAssaultCharacter.h"
-#include <time.h>
+#include "BaseBattery.h"
+
 // AI include
 #include "Perception/PawnSensingComponent.h"
 
@@ -23,13 +24,12 @@ AMechAICharacter::AMechAICharacter()
 	PawnSensingComp->LOSHearingThreshold = 1200;
 
 	m_CurrentWaypoint = NULL;
-	WaypointToPlayerDistance = 400.0f;
+	WaypointToPlayerDistance = 100.0f;
 }
 
 // Called when the game starts or when spawned
 void AMechAICharacter::BeginPlay()
 {
-	srand(time(NULL));
 	Super::BeginPlay();
 	FollowCamera->Deactivate();
 
@@ -84,16 +84,11 @@ void AMechAICharacter::SelectWaypoint()
 		return;
 	}
 
-	int32 randomNum = (rand() % m_Waypoints.Num());
-
 	AMechAIController* MechAIController = Cast<AMechAIController>(GetController());
 	if (MechAIController)
 	{
-			m_CurrentWaypoint = m_Waypoints[randomNum];
-			MechAIController->SetNextWaypoint(m_Waypoints[randomNum]);
+		AActor* waypoint = m_Waypoints[FMath::RandRange(0, m_Waypoints.Num() - 1)];
+		m_CurrentWaypoint = waypoint;
+		MechAIController->SetNextWaypoint(waypoint);
 	}
-
 }
-
-
-

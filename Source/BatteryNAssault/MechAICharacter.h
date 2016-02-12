@@ -30,8 +30,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
 
-	// Triggered by the UPawnSensing component when any pawn is spotted
 protected:
+	// Triggered by the UPawnSensing component when any pawn is spotted
 	UFUNCTION()
 	void OnSeePlayer(APawn* Pawn);
 
@@ -41,12 +41,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float WaypointToPlayerDistance;
 
+
+private:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	AActor* m_CurrentWaypoint;
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	TArray<AActor*> m_Waypoints;
-
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")

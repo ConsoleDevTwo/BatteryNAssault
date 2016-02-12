@@ -7,6 +7,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "MechAICharacter.h"
 
 #include "MechAIController.generated.h"
 
@@ -36,9 +37,13 @@ class BATTERYNASSAULT_API AMechAIController : public AAIController
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName WaypointTarget;
 
+	AMechAICharacter* MyCharacter;
 
 public:
 	void SetTargetEnemy(APawn* NewTarget);
 	void SetNextWaypoint(AActor* NextWaypoint);
-	
+
+	AActor* GetCurrentWaypoint();
+	int8 GetTeamID();
+	float GetBatteryCharge();
 };

@@ -35,6 +35,6 @@ protected:
 
 public:
 	UPROPERTY(EditAnywhere)
-	int32 TeamID;
+	int8 TeamID;
 
 };

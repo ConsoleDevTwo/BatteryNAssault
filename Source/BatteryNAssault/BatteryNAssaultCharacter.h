@@ -97,7 +97,10 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	// The team ID of this player
-	UPROPERTY(BlueprintReadOnly)
-	int32 TeamID;
+	UPROPERTY(EditAnywhere, Category = "Team")
+	int8 TeamID;
+
+	UFUNCTION()
+	float GetEnergy();
 };
 

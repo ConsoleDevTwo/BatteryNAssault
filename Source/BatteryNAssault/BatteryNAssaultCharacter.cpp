@@ -205,3 +205,8 @@ void ABatteryNAssaultCharacter::Recharge(float charge)
 	FString Message = FString::Printf(TEXT("Charging"));
 	GEngine->AddOnScreenDebugMessage(4, 0.1f, FColor::White, Message);
 }
+
+float ABatteryNAssaultCharacter::GetEnergy()
+{
+	return Energy;
+}
