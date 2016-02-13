@@ -32,4 +32,9 @@ protected:
 	float ChargePerSecond;
 
 	TArray<AActor *> gameMechs;
+
+public:
+	UPROPERTY(EditAnywhere)
+	int8 TeamID;
+
 };

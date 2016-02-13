@@ -2,14 +2,15 @@
 
 #pragma once
 
-#include "GameFramework/Character.h"
+#include "BatteryNAssaultCharacter.h"
+#include "WanderWaypoint.h"
 #include "MechAICharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTERYNASSAULT_API AMechAICharacter : public ACharacter
+class BATTERYNASSAULT_API AMechAICharacter : public ABatteryNAssaultCharacter
 {
 	GENERATED_BODY()
 	
@@ -29,10 +30,24 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
 
-	// Triggered by the UPawnSensing component when any pawn is spotted
 protected:
+	// Triggered by the UPawnSensing component when any pawn is spotted
 	UFUNCTION()
 	void OnSeePlayer(APawn* Pawn);
+
+	UFUNCTION()
+	void SelectWaypoint();
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	float WaypointToPlayerDistance;
+
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	AActor* m_CurrentWaypoint;
+
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	TArray<AActor*> m_Waypoints;
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
