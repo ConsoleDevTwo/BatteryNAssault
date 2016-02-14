@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BatteryNAssault.h"
+#include "MyTestTarget.h"
 #include "MyProjectile.h"
 
 
@@ -29,25 +30,41 @@ AMyProjectile::AMyProjectile()
 void AMyProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-
+	Direction = GetActorForwardVector();
+	InitPosition = GetActorLocation();
 }
 
 // Called every frame
 void AMyProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	FVector Distatnce = GetActorLocation() - InitPosition;
+	if (Distatnce.Size() > 2000)
+	{
+		Destroy();
+	}
 }
 void AMyProjectile::OnBeginOverlap(AActor* OtherActor)
 {
+	AMyTestTarget *Target = Cast<AMyTestTarget>(OtherActor);
 
-	if (OtherActor)
+	if (Target)
 	{
+		GEngine->AddOnScreenDebugMessage(
+			1,
+			1.f,
+			FColor::Yellow,
+			TEXT("destroy"));
 
-		UGameplayStatics::ApplyDamage(OtherActor, DamageDealt, Instigator->GetController(), Instigator, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(
+			OtherActor, 
+			DamageDealt, 
+			Instigator->GetController(), 
+			Instigator, 
+			UDamageType::StaticClass());
+		OtherActor->Destroy();
 		Destroy();
 	}
-	Destroy();
+	//Destroy();
 }
 

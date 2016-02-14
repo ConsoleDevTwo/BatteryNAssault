@@ -36,6 +36,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 		float DamageDealt = 1;
 
+
+	UPROPERTY(VisibleAnywhere)
+		FVector InitPosition;
+
+	UPROPERTY(VisibleAnywhere)
+		FVector Direction;
 	
 	
 };

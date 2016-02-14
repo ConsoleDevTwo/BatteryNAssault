@@ -24,13 +24,17 @@ void AMachineGun::Attack()
 
 	FActorSpawnParameters SpawnParameters;
 
+	
+
 	ABatteryNAssaultCharacter* Character = Cast<ABatteryNAssaultCharacter>(Instigator);
 	if (Character)
 	{
-		
-		
 		SpawnParameters.Instigator = Character;
-		GetWorld()->SpawnActor<AMyProjectile>(ProjectileClass,GetActorLocation(), Instigator->GetActorRotation(), SpawnParameters);
+		GetWorld()->SpawnActor<AMyProjectile>(
+			ProjectileClass,
+			GetActorLocation(), 
+			Instigator->GetActorRotation(), 
+			SpawnParameters);
 	}
 	
 

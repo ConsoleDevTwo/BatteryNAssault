@@ -203,7 +203,6 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 
 void ABatteryNAssaultCharacter::StartFire()
 {
-	
 	Weapon->StartAttack();
 }
 
