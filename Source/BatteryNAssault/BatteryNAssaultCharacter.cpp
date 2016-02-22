@@ -99,7 +99,7 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
 	if (Temp->GetComponentRotation() != CameraBoom->GetComponentRotation())
 	{
-		FRotator currentCameraRotation = FMath::RInterpTo(Temp->GetComponentRotation(), CameraBoom->GetComponentRotation(), GetWorld()->GetDeltaSeconds(), 0.5f);
+		FRotator currentCameraRotation = FMath::RInterpTo(Temp->GetComponentRotation(), CameraBoom->GetComponentRotation(), GetWorld()->GetDeltaSeconds(), 1.5f);
 		Temp->SetWorldRotation(currentCameraRotation);
 	}
 }
