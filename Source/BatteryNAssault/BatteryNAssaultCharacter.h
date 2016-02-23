@@ -41,10 +41,10 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float EnergyCostPerSecond;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float MaxEnergy;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Energy;
 
 
