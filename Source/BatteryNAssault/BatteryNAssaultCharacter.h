@@ -47,6 +47,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Energy;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float MaxHealth;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float Health;
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AWeapon> Gun;

@@ -25,6 +25,9 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	MaxEnergy = 100.f;
 	Energy = MaxEnergy;
 
+	MaxHealth = 100.f;
+	Health = MaxHealth;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
