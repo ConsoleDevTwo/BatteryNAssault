@@ -44,6 +44,7 @@ void AMechAIController::SetTargetEnemy(APawn* NewTarget)
 	if (BlackboardComp)
 	{
 		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
+		BlackboardComp->SetValueAsVector(SightedPosKeyName, NewTarget->GetActorLocation());
 	}
 }
 

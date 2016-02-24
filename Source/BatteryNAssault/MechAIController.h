@@ -37,6 +37,9 @@ class BATTERYNASSAULT_API AMechAIController : public AAIController
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName WaypointTarget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName SightedPosKeyName;
+
 	AMechAICharacter* MyCharacter;
 
 public:
