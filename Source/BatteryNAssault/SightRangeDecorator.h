@@ -22,6 +22,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Range;
 
-	UPROPERTY(EditAnywhere)
-	FBlackboard::FKey EnemyKey;
+//	UPROPERTY(EditAnywhere)
+//	FBlackboard::FKey EnemyKey;
 };
