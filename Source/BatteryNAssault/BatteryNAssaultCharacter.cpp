@@ -11,7 +11,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
-		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/TraceTest.TraceTest_C'")) {}
 	};
 	static FConstructorStatics ConstructorStatics;
 
