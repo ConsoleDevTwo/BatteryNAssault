@@ -40,7 +40,9 @@ bool USightRangeDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& Ow
 	//if the player is out of the range to chase then return false
 	if (FVector::Dist(SightPosition, MyController->GetCharacter()->GetActorLocation()) > Range)
 	{
-		//BlackboardComp->SetValueAsObject(EnemyKey, nullptr);
+		
+		BlackboardComp->SetValueAsObject(EnemyKey.GetSelectedKeyID(), BlackboardComp->GetValueAsObject(FName("SelfActor")));
+		BlackboardComp->SetValueAsVector(BlackboardKey.GetSelectedKeyID(), FVector(-0, -0, -10000));
 		return false;
 	}
 
