@@ -30,6 +30,13 @@ public:
 	UFUNCTION()
 	virtual void Recharge ( float charge );
 
+	virtual float TakeDamage(
+				float DamageAmount,
+				struct FDamageEvent const& DamageEvent,
+				class AController* EventInstigator,
+				class AActor* DamageCauser
+			) override;
+
 protected:
 
 	/** Called for forwards/backward input */

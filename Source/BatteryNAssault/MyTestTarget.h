@@ -20,6 +20,13 @@ public:
 	// Called every frame
 	//virtual void Tick( float DeltaSeconds ) override;
 
+	virtual float TakeDamage (
+			float DamageAmount,
+			struct FDamageEvent const& DamageEvent,
+			class AController* EventInstigator,
+			class AActor* DamageCauser
+		) override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent* Collider;

@@ -27,7 +27,16 @@ void ARocket::OnBeginOverlap(AActor* OtherActor)
 
 	if (flame)
 		UGameplayStatics::SpawnEmitterAtLocation(this, flame, GetActorLocation());
-	UGameplayStatics::ApplyRadialDamage(this, DamageDealt, GetActorLocation(), 250, UDamageType::StaticClass(), TArray<AActor*>(), Instigator, Instigator->GetController(), true);
+	UGameplayStatics::ApplyRadialDamage(
+		this, 
+		DamageDealt, 
+		GetActorLocation(), 
+		250, 
+		UDamageType::StaticClass(), 
+		TArray<AActor*>(), 
+		Instigator, 
+		Instigator->GetController(), 
+		true);
 	Destroy();
 }
 

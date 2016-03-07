@@ -203,3 +203,20 @@ float ABatteryNAssaultCharacter::GetEnergy()
 {
 	return Energy;
 }
+
+float ABatteryNAssaultCharacter::TakeDamage(
+	float DamageAmount,
+	struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator,
+	class AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(
+		1,
+		1.f,
+		FColor::Yellow,
+		TEXT("destroy"));
+	//Destroy();
+
+	Health -= 10;
+	return 0;
+}

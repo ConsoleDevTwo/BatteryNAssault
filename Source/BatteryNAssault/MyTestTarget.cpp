@@ -19,6 +19,20 @@ AMyTestTarget::AMyTestTarget()
 	Mesh->AttachTo(RootComponent);
 }
 
+float AMyTestTarget::TakeDamage(
+	float DamageAmount, 
+	struct FDamageEvent const& DamageEvent, 
+	class AController* EventInstigator, 
+	class AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(
+		1,
+		1.f,
+		FColor::Yellow,
+		TEXT("destroy"));
+	Destroy();
+	return 0;
+}
 // Called when the game starts or when spawned
 /*void AMyTestTarget::BeginPlay()
 {
