@@ -114,8 +114,6 @@ void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent*
 {
 	// Set up gameplay key bindings
 	check(InputComponent);
-	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	InputComponent->BindAxis("MoveForward", this, &ABatteryNAssaultCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ABatteryNAssaultCharacter::MoveRight);
@@ -128,10 +126,6 @@ void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent*
 	InputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	InputComponent->BindAxis("LookUpRate", this, &ABatteryNAssaultCharacter::LookUpAtRate);
 
-	// handle touch devices
-	InputComponent->BindTouch(IE_Pressed, this, &ABatteryNAssaultCharacter::TouchStarted);
-	InputComponent->BindTouch(IE_Released, this, &ABatteryNAssaultCharacter::TouchStopped);
-
 	InputComponent->BindAction(TEXT("Fire"),
 		IE_Pressed,
 		this,
@@ -142,24 +136,6 @@ void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent*
 		this,
 		&ABatteryNAssaultCharacter::StopFire);
 	
-}
-
-
-void ABatteryNAssaultCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	// jump, but only on the first touch
-	if (FingerIndex == ETouchIndex::Touch1)
-	{
-		Jump();
-	}
-}
-
-void ABatteryNAssaultCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	if (FingerIndex == ETouchIndex::Touch1)
-	{
-		StopJumping();
-	}
 }
 
 void ABatteryNAssaultCharacter::TurnAtRate(float Rate)
