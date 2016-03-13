@@ -17,7 +17,7 @@ public:
 
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
@@ -61,16 +61,16 @@ protected:
 	float Health;
 
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<AWeapon> Gun;
+	TSubclassOf<AWeapon> Gun;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		UStaticMeshComponent* Temp;
+	UStaticMeshComponent* Temp;
 
 	UFUNCTION()
-		virtual void StartFire();
+	virtual void StartFire();
 
 	UFUNCTION()
-		virtual void StopFire();
+	virtual void StopFire();
 
 
 	/** Camera boom positioning the camera behind the character */
@@ -108,6 +108,15 @@ public:
 	// The team ID of this player
 	UPROPERTY(EditAnywhere, Category = "Team")
 	int8 TeamID;
+
+	UPROPERTY(EditAnywhere, Category = "Tower")
+		float TowerRotationY;
+
+	UPROPERTY(EditAnywhere, Category = "Tower")
+		float TowerRotationZ;
+
+	UPROPERTY(EditAnywhere, Category = "Tower")
+		FRotator TowerRotation;
 
 	UFUNCTION()
 	float GetEnergy();

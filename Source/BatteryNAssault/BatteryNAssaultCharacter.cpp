@@ -68,6 +68,9 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	TeamID = 0;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	TowerRotationY = 0;
+	TowerRotationZ = 0;
 }
 
 void ABatteryNAssaultCharacter::BeginPlay()
@@ -105,6 +108,13 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 		FRotator currentCameraRotation = FMath::RInterpTo(Temp->GetComponentRotation(), CameraBoom->GetComponentRotation(), GetWorld()->GetDeltaSeconds(), 1.5f);
 		Temp->SetWorldRotation(currentCameraRotation);
 	}
+
+	const FRotator CameraRot = FollowCamera->GetComponentRotation();
+	const FRotator ActorRot = GetActorRotation();
+	const FRotator YawRotation(0, CameraRot.Yaw - ActorRot.Yaw, 0);
+
+	TowerRotation = YawRotation;
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -152,22 +162,29 @@ void ABatteryNAssaultCharacter::LookUpAtRate(float Rate)
 
 void ABatteryNAssaultCharacter::MoveForward(float Value)
 {
+
+	CharacterMovement->AddInputVector(GetActorForwardVector() *	CharacterMovement->MaxWalkSpeed * Value * GetWorld()->GetDeltaSeconds());
+	/*
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator Rotation = GetActorRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, Value);
 	}
+	*/
 }
 
 void ABatteryNAssaultCharacter::MoveRight(float Value)
 {
+	AddActorWorldRotation(FRotator(0.0f, Value * BaseTurnRate * GetWorld()->GetDeltaSeconds(), 0));
+	/*
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
+
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -177,6 +194,7 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+	*/
 
 }
 
