@@ -40,9 +40,6 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-
-
-
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
@@ -57,9 +54,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 
 	Temp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Temp"));
 	Temp->AttachTo(RootComponent);
-
-
-
+	
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation

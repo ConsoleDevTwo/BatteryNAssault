@@ -5,23 +5,13 @@
 #include "MechAIController.h"
 #include "BatteryNAssaultCharacter.h"
 #include "BaseBattery.h"
-
-// AI include
-#include "Perception/PawnSensingComponent.h"
-
+#include "AISight.h"
 
 // Sets default values
 AMechAICharacter::AMechAICharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-
-	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
-	PawnSensingComp->SetPeripheralVisionAngle(60.0f);
-	PawnSensingComp->SightRadius = 2000;
-	PawnSensingComp->HearingThreshold = 600;
-	PawnSensingComp->LOSHearingThreshold = 1200;
 
 	m_CurrentWaypoint = NULL;
 	WaypointToPlayerDistance = 100.0f;
@@ -33,19 +23,21 @@ AMechAICharacter::AMechAICharacter()
 void AMechAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FActorSpawnParameters spawnParams;
+	spawnParams.Owner = this;
+
+	AISightComp = GetWorld()->SpawnActor<AAISight>(AAISight::StaticClass(), spawnParams);
+	AISightComp->SetAI(this);
+	AISightComp->AttachRootComponentTo(this->GetMesh(), FName("S_WEAPON"));
+	AISightComp->SetActorRelativeRotation(FRotator(0, 180, 0));
+
 	FollowCamera->Deactivate();
 
 	// Get all the wander waypoints in the map
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWanderWaypoint::StaticClass(), m_Waypoints);
 
 	SelectWaypoint();
-
-	if (PawnSensingComp)
-	{
-		PawnSensingComp->OnSeePawn.AddDynamic(this, &AMechAICharacter::OnSeePlayer);
-		
-	}
-
 }
 
 // Called every frame
@@ -83,9 +75,7 @@ void AMechAICharacter::Tick(float DeltaTime)
 void AMechAICharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	Super::SetupPlayerInputComponent(InputComponent);
-
 }
-
 
 // What the AI will do when it sees a player
 void AMechAICharacter::OnSeePlayer(APawn* Pawn)

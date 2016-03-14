@@ -27,13 +27,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	UPROPERTY(VisibleAnywhere, Category = "AI")
-	class UPawnSensingComponent* PawnSensingComp;
-
 protected:
-	// Triggered by the UPawnSensing component when any pawn is spotted
-	UFUNCTION()
-	void OnSeePlayer(APawn* Pawn);
 
 	UFUNCTION()
 	void SelectWaypoint();
@@ -52,6 +46,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	UPROPERTY(VisibleAnywhere)
+	class AAISight* AISightComp;
+
 	// The speed at which the tower will rotate
 	UPROPERTY(EditAnywhere, Category = "Tower")
 	float TowerRotationSpeed;
@@ -64,4 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Tower")
 	bool bIsAtLookDirection;
 
+	// Triggered by the UPawnSensing component when any pawn is spotted
+	UFUNCTION()
+	void OnSeePlayer(APawn* Pawn);
 };
