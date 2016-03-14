@@ -110,13 +110,7 @@ public:
 	int8 TeamID;
 
 	UPROPERTY(EditAnywhere, Category = "Tower")
-		float TowerRotationY;
-
-	UPROPERTY(EditAnywhere, Category = "Tower")
-		float TowerRotationZ;
-
-	UPROPERTY(EditAnywhere, Category = "Tower")
-		FRotator TowerRotation;
+	FRotator TowerRotation;
 
 	UFUNCTION()
 	float GetEnergy();

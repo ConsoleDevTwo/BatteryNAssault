@@ -18,13 +18,6 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float TowerRotationY;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float TowerRotationZ;
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FRotator TowerRotation;
 
 	

@@ -68,9 +68,6 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	TeamID = 0;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-
-	TowerRotationY = 0;
-	TowerRotationZ = 0;
 }
 
 void ABatteryNAssaultCharacter::BeginPlay()
@@ -228,11 +225,7 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	class AController* EventInstigator,
 	class AActor* DamageCauser)
 {
-	GEngine->AddOnScreenDebugMessage(
-		1,
-		1.f,
-		FColor::Yellow,
-		TEXT("destroy"));
+	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
 
 	Health -= 10;

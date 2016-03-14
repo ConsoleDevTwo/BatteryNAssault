@@ -41,7 +41,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float WaypointToPlayerDistance;
 
-
 private:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	AActor* m_CurrentWaypoint;
@@ -53,5 +52,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	// The speed at which the tower will rotate
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	float TowerRotationSpeed;
+
+	// The direction that the AI will try to look at
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	FVector LookLocation;
+
+	// If the AI has looked at where it wanted to it will be set to true
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	bool bIsAtLookDirection;
 
 };

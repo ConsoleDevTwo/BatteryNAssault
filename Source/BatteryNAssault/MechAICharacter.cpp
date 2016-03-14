@@ -25,6 +25,8 @@ AMechAICharacter::AMechAICharacter()
 
 	m_CurrentWaypoint = NULL;
 	WaypointToPlayerDistance = 100.0f;
+
+	TowerRotationSpeed = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -49,13 +51,32 @@ void AMechAICharacter::BeginPlay()
 // Called every frame
 void AMechAICharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	if (Energy > 0)
+	{
+		Energy -= EnergyCostPerSecond * DeltaTime;
+	}
 
 	if (m_CurrentWaypoint == NULL || FVector::Dist(GetTransform().GetTranslation(), m_CurrentWaypoint->GetTransform().GetTranslation()) <= WaypointToPlayerDistance)
 	{
 		SelectWaypoint();
 	}
-	
+
+	FVector Direction = LookLocation - GetActorLocation();
+	FRotator rot = FRotationMatrix::MakeFromX(Direction).Rotator();
+
+	if (TowerRotation != rot)
+	{
+		// If the bool is true, set it to false
+		if(bIsAtLookDirection)
+			bIsAtLookDirection = false;
+		
+		// Rotate the tower
+		TowerRotation = FMath::RInterpTo(TowerRotation, rot, DeltaTime, TowerRotationSpeed);
+	}
+	else if (!bIsAtLookDirection)
+	{
+		bIsAtLookDirection = true;
+	}
 }
 
 // Called to bind functionality to input

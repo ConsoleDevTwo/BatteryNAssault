@@ -15,8 +15,6 @@ void UMechAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		ABatteryNAssaultCharacter* MyCharacter = Cast<ABatteryNAssaultCharacter>(OwningCharacter);
 		if (MyCharacter)
 		{
-			TowerRotationY = MyCharacter->TowerRotationY;
-			TowerRotationZ = MyCharacter->TowerRotationZ;
 			TowerRotation = MyCharacter->TowerRotation;
 		}
 	}
