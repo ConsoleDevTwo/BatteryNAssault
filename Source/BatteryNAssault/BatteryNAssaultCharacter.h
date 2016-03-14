@@ -64,7 +64,7 @@ protected:
 	TSubclassOf<AWeapon> Gun;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* Temp;
+	USkeletalMeshComponent* Turret;
 
 	UFUNCTION()
 	virtual void StartFire();

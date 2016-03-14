@@ -55,10 +55,8 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
-	Temp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Temp"));
-	Temp->AttachTo(RootComponent);
-
-
+	Turret = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Turret"));
+	Turret->AttachTo(RootComponent);
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -81,7 +79,7 @@ void ABatteryNAssaultCharacter::BeginPlay()
 	if (Spawn)
 	{
 		//Spawn->AttachRootComponentTo(GetMesh(),"WeaponSocket", EAttachLocation::SnapToTarget);
-		Spawn->AttachRootComponentTo(Temp);
+		Spawn->AttachRootComponentTo(Turret);
 		Weapon = Spawn;
 		
 		
@@ -100,17 +98,21 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 
 	FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
 	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
-	if (Temp->GetComponentRotation() != CameraBoom->GetComponentRotation())
+	const FRotator ActorRot = GetActorRotation();
+	const FRotator BaseRotation(0, CameraBoom->GetComponentRotation().Yaw - ActorRot.Yaw, 0);
+	const FRotator TurretRotation(CameraBoom->GetComponentRotation().Pitch - ActorRot.Pitch, CameraBoom->GetComponentRotation().Yaw - ActorRot.Yaw, 0);
+	if (Turret->GetComponentRotation() != TurretRotation)
 	{
-		FRotator currentCameraRotation = FMath::RInterpTo(Temp->GetComponentRotation(), CameraBoom->GetComponentRotation(), GetWorld()->GetDeltaSeconds(), 1.5f);
-		Temp->SetWorldRotation(currentCameraRotation);
+		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 1.5f);
+		Turret->SetWorldRotation(currentCameraRotation);
+	}
+	if (TowerRotation != BaseRotation)
+	{
+		FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 1.5f);
+		TowerRotation = currentBaseRotation;
 	}
 
-	const FRotator CameraRot = FollowCamera->GetComponentRotation();
-	const FRotator ActorRot = GetActorRotation();
-	const FRotator YawRotation(0, CameraRot.Yaw - ActorRot.Yaw, 0);
-
-	TowerRotation = YawRotation;
+	//const FRotator CameraRot = FollowCamera->GetComponentRotation();
 
 }
 
