@@ -24,11 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-
 protected:
-
 	UFUNCTION()
 	void SelectWaypoint();
 
@@ -42,10 +38,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	TArray<AActor*> m_Waypoints;
 
+	// Finds a new random location around the mech to look towards
 	UFUNCTION()
 	void FindNewLookLocation();
 
-		UFUNCTION()
+	// Rotates the tower to look towards the location
+	UFUNCTION()
 	void RotateTower(float DeltaTime);
 
 public:

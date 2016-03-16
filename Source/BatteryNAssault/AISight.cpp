@@ -11,6 +11,8 @@
 // Sets default values
 AAISight::AAISight()
 {
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = Root;
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
@@ -34,10 +36,5 @@ void AAISight::BeginPlay()
 void AAISight::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-}
-
-void AAISight::SetAI(AMechAICharacter* character)
-{
-	MyCharacter = character;
 }
 

@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "AISight.generated.h"
 
 UCLASS()
-class BATTERYNASSAULT_API AAISight : public AActor
+class BATTERYNASSAULT_API AAISight : public APawn
 {
 	GENERATED_BODY()
 public:	
@@ -18,15 +18,11 @@ public:
 	
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
-
-	void SetAI(class AMechAICharacter* character);
-
+	
 	UPROPERTY(EditAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
 
 protected:
-	class AMechAICharacter* MyCharacter;
-
 	USceneComponent* Root;
 
 

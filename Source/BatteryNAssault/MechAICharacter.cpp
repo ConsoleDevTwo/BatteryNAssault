@@ -28,12 +28,14 @@ void AMechAICharacter::BeginPlay()
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = this;
 
+	// Give the AI a AISight component and attach it to the head
 	AISightComp = GetWorld()->SpawnActor<AAISight>(AAISight::StaticClass(), spawnParams);
-	AISightComp->SetAI(this);
 	AISightComp->AttachRootComponentTo(this->GetMesh(), FName("S_WEAPON"));
 	AISightComp->SetActorRelativeRotation(FRotator(0, 180, 0));
+	// Tell the pawn sensing component to use our OnSeePlayer Function that we created
 	AISightComp->PawnSensingComp->OnSeePawn.AddDynamic(this, &AMechAICharacter::OnSeePlayer);
 
+	// Deactivate the camera since we are not a player
 	FollowCamera->Deactivate();
 
 	// Get all the wander waypoints in the map
@@ -45,7 +47,6 @@ void AMechAICharacter::BeginPlay()
 // Called every frame
 void AMechAICharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
 	if (Energy > 0)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;
@@ -59,12 +60,6 @@ void AMechAICharacter::Tick(float DeltaTime)
 	RotateTower(DeltaTime);
 	FindNewLookLocation();
 
-}
-
-// Called to bind functionality to input
-void AMechAICharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
-{
-	Super::SetupPlayerInputComponent(InputComponent);
 }
 
 // What the AI will do when it sees a player
