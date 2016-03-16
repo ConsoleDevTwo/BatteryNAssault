@@ -6,9 +6,15 @@
 #include "WanderWaypoint.h"
 #include "MechAICharacter.generated.h"
 
-/**
- * 
- */
+
+UENUM(BlueprintType)		//"BlueprintType" is essential to include
+enum class AIStates : uint8
+{
+	PATROL 	UMETA(DisplayName = "Patrol"),
+	COMBAT  UMETA(DisplayName = "Combat"),
+	RECHARGE UMETA(DisplayName = "Recharge"),
+};
+
 UCLASS()
 class BATTERYNASSAULT_API AMechAICharacter : public ABatteryNAssaultCharacter
 {
@@ -64,6 +70,9 @@ public:
 	// If the AI has looked at where it wanted to it will be set to true
 	UPROPERTY(EditAnywhere, Category = "Tower")
 	bool bIsAtLookDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	AIStates State;
 
 	// Triggered by the UPawnSensing component when any pawn is spotted
 	UFUNCTION()

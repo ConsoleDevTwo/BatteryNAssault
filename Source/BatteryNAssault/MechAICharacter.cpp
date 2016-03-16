@@ -52,13 +52,28 @@ void AMechAICharacter::Tick(float DeltaTime)
 		Energy -= EnergyCostPerSecond * DeltaTime;
 	}
 
-	if (m_CurrentWaypoint == NULL || FVector::Dist(GetTransform().GetTranslation(), m_CurrentWaypoint->GetTransform().GetTranslation()) <= WaypointToPlayerDistance)
+
+	switch (State)
 	{
-		SelectWaypoint();
+	case AIStates::PATROL:
+		FindNewLookLocation();
+
+		if (m_CurrentWaypoint == NULL || FVector::Dist(GetTransform().GetTranslation(), m_CurrentWaypoint->GetTransform().GetTranslation()) <= WaypointToPlayerDistance)
+		{
+			SelectWaypoint();
+		}
+		break;
+	case AIStates::COMBAT:
+		break;
+	case AIStates::RECHARGE:
+		FindNewLookLocation();
+		break;
+
+	default:
+		break;
 	}
 
 	RotateTower(DeltaTime);
-	FindNewLookLocation();
 
 }
 
@@ -91,9 +106,8 @@ void AMechAICharacter::SelectWaypoint()
 
 void AMechAICharacter::RotateTower(float DeltaTime)
 {
-
 	FVector Direction = LookLocation - GetActorLocation();
-	FRotator rot = FRotationMatrix::MakeFromX(Direction).Rotator();
+	FRotator rot = FRotationMatrix::MakeFromX(Direction).Rotator() - GetActorRotation();
 
 	if (TowerRotation.Yaw + 5.0f < rot.Yaw || TowerRotation.Yaw - 5.0f > rot.Yaw)
 	{

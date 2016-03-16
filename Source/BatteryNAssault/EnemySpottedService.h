@@ -16,9 +16,7 @@ class BATTERYNASSAULT_API UEnemySpottedService : public UBTService_BlackboardBas
 public:
 	UEnemySpottedService();
 
-	virtual void TickNode(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds) override;
-	void ReceiveTick(UBehaviorTreeComponent & OwnerComp, float DeltaSeconds);
-	
-//	EBlackboardNotificationResult OnBlackboardKeyValueChange(const UBlackboardComponent& Blackboard, FBlackboard::FKey ChangedKeyID);
+protected:
+	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 };
