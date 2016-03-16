@@ -6,6 +6,7 @@
 #include "BatteryNAssaultCharacter.h"
 #include "BaseBattery.h"
 #include "AISight.h"
+#include "Perception/PawnSensingComponent.h"
 
 // Sets default values
 AMechAICharacter::AMechAICharacter()
@@ -31,6 +32,7 @@ void AMechAICharacter::BeginPlay()
 	AISightComp->SetAI(this);
 	AISightComp->AttachRootComponentTo(this->GetMesh(), FName("S_WEAPON"));
 	AISightComp->SetActorRelativeRotation(FRotator(0, 180, 0));
+	AISightComp->PawnSensingComp->OnSeePawn.AddDynamic(this, &AMechAICharacter::OnSeePlayer);
 
 	FollowCamera->Deactivate();
 
@@ -43,6 +45,7 @@ void AMechAICharacter::BeginPlay()
 // Called every frame
 void AMechAICharacter::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 	if (Energy > 0)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;
@@ -53,22 +56,9 @@ void AMechAICharacter::Tick(float DeltaTime)
 		SelectWaypoint();
 	}
 
-	FVector Direction = LookLocation - GetActorLocation();
-	FRotator rot = FRotationMatrix::MakeFromX(Direction).Rotator();
+	RotateTower(DeltaTime);
+	FindNewLookLocation();
 
-	if (TowerRotation != rot)
-	{
-		// If the bool is true, set it to false
-		if(bIsAtLookDirection)
-			bIsAtLookDirection = false;
-		
-		// Rotate the tower
-		TowerRotation = FMath::RInterpTo(TowerRotation, rot, DeltaTime, TowerRotationSpeed);
-	}
-	else if (!bIsAtLookDirection)
-	{
-		bIsAtLookDirection = true;
-	}
 }
 
 // Called to bind functionality to input
@@ -102,4 +92,39 @@ void AMechAICharacter::SelectWaypoint()
 		m_CurrentWaypoint = waypoint;
 		MechAIController->SetNextWaypoint(waypoint);
 	}
+}
+
+void AMechAICharacter::RotateTower(float DeltaTime)
+{
+
+	FVector Direction = LookLocation - GetActorLocation();
+	FRotator rot = FRotationMatrix::MakeFromX(Direction).Rotator();
+
+	if (TowerRotation.Yaw + 5.0f < rot.Yaw || TowerRotation.Yaw - 5.0f > rot.Yaw)
+	{
+		// If the bool is true, set it to false
+		if (bIsAtLookDirection)
+			bIsAtLookDirection = false;
+
+		// Rotate the tower
+		TowerRotation = FMath::RInterpTo(TowerRotation, rot, DeltaTime, TowerRotationSpeed);
+	}
+	else if (!bIsAtLookDirection)
+	{
+		bIsAtLookDirection = true;
+	}
+}
+
+void AMechAICharacter::FindNewLookLocation()
+{
+	if (!bIsAtLookDirection)
+	{
+		return;
+	}
+
+	float rand = FMath::Rand() % 100;
+
+	LookLocation = GetActorLocation() + FVector(FMath::Sin(rand) * 2000, FMath::Cos(rand) * 2000, 0);
+	bIsAtLookDirection = false;
+
 }

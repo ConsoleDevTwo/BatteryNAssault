@@ -42,6 +42,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	TArray<AActor*> m_Waypoints;
 
+	UFUNCTION()
+	void FindNewLookLocation();
+
+		UFUNCTION()
+	void RotateTower(float DeltaTime);
+
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	class UBehaviorTree* BehaviorTree;

@@ -52,15 +52,9 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
-<<<<<<< HEAD
-	Temp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Temp"));
-	Temp->AttachTo(RootComponent);
-	
-=======
 	Turret = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Turret"));
 	Turret->AttachTo(RootComponent);
 
->>>>>>> 54501288b2760be2071f215860360cea2a4d4da1
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
@@ -84,9 +78,6 @@ void ABatteryNAssaultCharacter::BeginPlay()
 		//Spawn->AttachRootComponentTo(GetMesh(),"WeaponSocket", EAttachLocation::SnapToTarget);
 		Spawn->AttachRootComponentTo(Turret);
 		Weapon = Spawn;
-		
-		
-
 	}
 }
 

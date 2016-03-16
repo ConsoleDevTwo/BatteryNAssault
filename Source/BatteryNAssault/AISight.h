@@ -9,7 +9,6 @@ UCLASS()
 class BATTERYNASSAULT_API AAISight : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
 	// Sets default values for this actor's properties
 	AAISight();
@@ -22,12 +21,13 @@ public:
 
 	void SetAI(class AMechAICharacter* character);
 
+	UPROPERTY(EditAnywhere, Category = "AI")
+	class UPawnSensingComponent* PawnSensingComp;
+
 protected:
 	class AMechAICharacter* MyCharacter;
 
 	USceneComponent* Root;
 
-	UPROPERTY(EditAnywhere, Category = "AI")
-	class UPawnSensingComponent* PawnSensingComp;
-	
+
 };
