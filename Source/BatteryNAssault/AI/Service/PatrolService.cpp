@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BatteryNAssault.h"
-#include "EnemySpottedService.h"
+#include "PatrolService.h"
 
 // AI module includes
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -14,12 +14,13 @@
 #include "MechAICharacter.h"
 
 
-UEnemySpottedService::UEnemySpottedService()
+UPatrolService::UPatrolService()
 {
-	
+
 }
 
-void UEnemySpottedService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+
+void UPatrolService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
@@ -38,19 +39,9 @@ void UEnemySpottedService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
 	if (!AICharacter)
 		return;
 
-
-	// Get the enemy and see if it exists
-	ABatteryNAssaultCharacter* Target = Cast<ABatteryNAssaultCharacter>(BlackboardComp->GetValueAsObject(GetSelectedBlackboardKey()));
-	if (!Target)
-		return;
-
-
-	if (AICharacter->State != AIStates::COMBAT)
+	if (AICharacter->State != AIStates::SEARCHING)
 	{
-		AICharacter->State = AIStates::COMBAT;
+		AICharacter->State = AIStates::SEARCHING;
 	}
 
-	AICharacter->LookLocation =  Target->GetActorLocation() + Target->GetVelocity() * DeltaSeconds;
-
-	
 }

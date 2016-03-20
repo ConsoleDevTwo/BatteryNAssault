@@ -10,9 +10,8 @@
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class AIStates : uint8
 {
-	PATROL 	UMETA(DisplayName = "Patrol"),
-	COMBAT  UMETA(DisplayName = "Combat"),
-	RECHARGE UMETA(DisplayName = "Recharge"),
+	SEARCHING 	UMETA(DisplayName = "Searching"),
+	SPOTTED  UMETA(DisplayName = "EnemySpotted"),
 };
 
 UCLASS()

@@ -55,7 +55,7 @@ void AMechAICharacter::Tick(float DeltaTime)
 
 	switch (State)
 	{
-	case AIStates::PATROL:
+	case AIStates::SEARCHING:
 		FindNewLookLocation();
 
 		if (m_CurrentWaypoint == NULL || FVector::Dist(GetTransform().GetTranslation(), m_CurrentWaypoint->GetTransform().GetTranslation()) <= WaypointToPlayerDistance)
@@ -63,12 +63,8 @@ void AMechAICharacter::Tick(float DeltaTime)
 			SelectWaypoint();
 		}
 		break;
-	case AIStates::COMBAT:
+	case AIStates::SPOTTED:
 		break;
-	case AIStates::RECHARGE:
-		FindNewLookLocation();
-		break;
-
 	default:
 		break;
 	}

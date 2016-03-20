@@ -41,7 +41,7 @@ void AMechAIController::UnPossess()
 
 void AMechAIController::SetTargetEnemy(APawn* NewTarget)
 {
-	if (BlackboardComp && (NewTarget != BlackboardComp->GetValueAsObject(TargetEnemyKeyName) || BlackboardComp->GetValueAsVector(SightedPosKeyName).Z == -10000))
+	if (BlackboardComp && NewTarget != BlackboardComp->GetValueAsObject(TargetEnemyKeyName))
 	{
 		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
 		BlackboardComp->SetValueAsVector(SightedPosKeyName, NewTarget->GetActorLocation());
