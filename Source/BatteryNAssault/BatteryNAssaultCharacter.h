@@ -99,6 +99,12 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+
+private:
+	//Changes the color of the robot depending on the team ID
+	UFUNCTION()
+	void ChangeRobotColor();
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

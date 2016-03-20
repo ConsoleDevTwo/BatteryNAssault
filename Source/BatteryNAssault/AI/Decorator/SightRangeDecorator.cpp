@@ -4,6 +4,7 @@
 #include "SightRangeDecorator.h"
 
 #include "MechAIController.h"
+#include "BatteryNAssaultCharacter.h"
 
 // AI module includes
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -36,10 +37,17 @@ bool USightRangeDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& Ow
 		return false;
 	}
 
+	ABatteryNAssaultCharacter* Enemy = Cast<ABatteryNAssaultCharacter>(BlackboardComp->GetValueAsObject("Enemy"));
+	if (!Enemy)
+	{
+		return false;
+	}
+
 	FVector SightPosition = BlackboardComp->GetValueAsVector(BlackboardKey.GetSelectedKeyID());
-	
+	FVector EnemyPos = Enemy->GetActorLocation();
+
 	//if the player is out of the range to chase then return false
-	if (FVector::Dist(SightPosition, MyController->GetCharacter()->GetActorLocation()) > Range)
+	if (FVector::Dist(SightPosition, EnemyPos) > Range)
 	{
 		BlackboardComp->ClearValue("Enemy");
 		return false;

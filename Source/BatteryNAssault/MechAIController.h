@@ -40,10 +40,15 @@ class BATTERYNASSAULT_API AMechAIController : public AAIController
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName SightedPosKeyName;
 
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName TargetLocationKeyName;
+
 	AMechAICharacter* MyCharacter;
 
 public:
 	void SetTargetEnemy(APawn* NewTarget);
+	void SetNextTargetLocation(FVector target);
 	void SetNextWaypoint(AActor* NextWaypoint);
 
 	AActor* GetCurrentWaypoint();

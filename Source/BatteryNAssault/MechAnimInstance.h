@@ -18,9 +18,5 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FRotator TowerRotation;
-
-	
-	
-	
+	FRotator TowerRotation;	
 };

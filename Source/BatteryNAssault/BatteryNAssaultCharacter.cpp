@@ -79,6 +79,8 @@ void ABatteryNAssaultCharacter::BeginPlay()
 		Spawn->AttachRootComponentTo(Turret);
 		Weapon = Spawn;
 	}
+	
+	ChangeRobotColor();
 }
 
 void ABatteryNAssaultCharacter::Tick(float DeltaTime)
@@ -226,4 +228,24 @@ float ABatteryNAssaultCharacter::TakeDamage(
 
 	Health -= 10;
 	return 0;
+}
+
+void ABatteryNAssaultCharacter::ChangeRobotColor()
+{
+	// Create a new dynamic material for this robot
+	UMaterialInstanceDynamic* DynamicMat = UMaterialInstanceDynamic::Create(GetMesh()->GetMaterial(0), this);
+
+	// Setting robot color based on team
+	if (TeamID == 0)
+	{
+		DynamicMat->SetVectorParameterValue("Color", FLinearColor::Blue);
+	}
+	else if (TeamID == 1)
+	{
+		DynamicMat->SetVectorParameterValue("Color", FLinearColor::Red);
+	}
+
+	// Set the robots material to the new dynamic material
+	GetMesh()->SetMobility(EComponentMobility::Movable);
+	GetMesh()->SetMaterial(0, DynamicMat);
 }

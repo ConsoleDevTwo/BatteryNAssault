@@ -64,6 +64,7 @@ void AMechAICharacter::Tick(float DeltaTime)
 		}
 		break;
 	case AIStates::SPOTTED:
+		AttemptToFire();
 		break;
 	default:
 		break;
@@ -100,10 +101,15 @@ void AMechAICharacter::SelectWaypoint()
 	}
 }
 
-void AMechAICharacter::RotateTower(float DeltaTime)
+FRotator AMechAICharacter::FindLookRotation()
 {
 	FVector Direction = LookLocation - GetActorLocation();
-	FRotator rot = FRotationMatrix::MakeFromX(Direction).Rotator() - GetActorRotation();
+	return FRotationMatrix::MakeFromX(Direction).Rotator() - GetActorRotation();
+}
+
+void AMechAICharacter::RotateTower(float DeltaTime)
+{
+	FRotator rot = FindLookRotation();
 
 	if (TowerRotation.Yaw + 5.0f < rot.Yaw || TowerRotation.Yaw - 5.0f > rot.Yaw)
 	{
@@ -131,5 +137,15 @@ void AMechAICharacter::FindNewLookLocation()
 
 	LookLocation = GetActorLocation() + FVector(FMath::Sin(rand) * 2000, FMath::Cos(rand) * 2000, 0);
 	bIsAtLookDirection = false;
+}
 
+void AMechAICharacter::AttemptToFire()
+{
+	if (!bIsAtLookDirection)
+		return;
+	
+	
+	// Fire logic is here
+	// Shooting logic is here
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "PewPew - Shooting since no fire logic yet");
 }

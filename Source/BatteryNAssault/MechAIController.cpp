@@ -41,7 +41,19 @@ void AMechAIController::UnPossess()
 
 void AMechAIController::SetTargetEnemy(APawn* NewTarget)
 {
-	if (BlackboardComp && NewTarget != BlackboardComp->GetValueAsObject(TargetEnemyKeyName))
+	if (!BlackboardComp)
+	{
+		return;
+	}
+
+	if (NewTarget == BlackboardComp->GetValueAsObject(TargetEnemyKeyName))
+	{
+		return;
+	}
+
+	ABatteryNAssaultCharacter* target = Cast<ABatteryNAssaultCharacter>(NewTarget);
+
+	if (target->TeamID != GetTeamID())
 	{
 		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
 		BlackboardComp->SetValueAsVector(SightedPosKeyName, NewTarget->GetActorLocation());
@@ -64,6 +76,14 @@ AActor* AMechAIController::GetCurrentWaypoint()
 	}
 	
 	return nullptr;
+}
+
+void AMechAIController::SetNextTargetLocation(FVector target)
+{
+	if (BlackboardComp)
+	{
+		BlackboardComp->SetValueAsVector(TargetLocationKeyName, target);
+	}
 }
 
 int8 AMechAIController::GetTeamID()

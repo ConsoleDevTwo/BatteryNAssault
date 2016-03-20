@@ -29,6 +29,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+	FRotator FindLookRotation();
+
 protected:
 	UFUNCTION()
 	void SelectWaypoint();
@@ -50,6 +52,9 @@ private:
 	// Rotates the tower to look towards the location
 	UFUNCTION()
 	void RotateTower(float DeltaTime);
+
+	UFUNCTION()
+	void AttemptToFire();
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
