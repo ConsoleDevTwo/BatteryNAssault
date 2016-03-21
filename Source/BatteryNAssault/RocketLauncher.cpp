@@ -12,7 +12,7 @@ ARocketLauncher::ARocketLauncher()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->AttachTo(RootComponent);
-	AttackSpeed = 1.0f;
+	AttackSpeed = 0.1f;
 	
 
 
@@ -33,7 +33,7 @@ void ARocketLauncher::Attack()
 		GetWorld()->SpawnActor<AMyProjectile>(
 			ProjectileClass,
 			GetActorLocation(),
-			Instigator->GetActorRotation(),
+			this->GetActorRotation(),
 			SpawnParameters);
 	}
 

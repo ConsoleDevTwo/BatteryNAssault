@@ -75,8 +75,8 @@ void ABatteryNAssaultCharacter::BeginPlay()
 	AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(Gun, SpawnParameters);
 	if (Spawn)
 	{
-		//Spawn->AttachRootComponentTo(GetMesh(),"WeaponSocket", EAttachLocation::SnapToTarget);
-		Spawn->AttachRootComponentTo(Turret);
+		Spawn->AttachRootComponentTo(Turret,"FirePoint", EAttachLocation::SnapToTarget);
+		//Spawn->AttachRootComponentTo(Turret);
 		Weapon = Spawn;
 	}
 	
