@@ -96,15 +96,15 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
 	const FRotator ActorRot = GetActorRotation();
 	const FRotator BaseRotation(0, CameraBoom->GetComponentRotation().Yaw - ActorRot.Yaw, 0);
-	const FRotator TurretRotation(CameraBoom->GetComponentRotation().Pitch - ActorRot.Pitch, CameraBoom->GetComponentRotation().Yaw - ActorRot.Yaw, 0);
+	const FRotator TurretRotation(-CameraBoom->GetComponentRotation().Pitch - ActorRot.Pitch, CameraBoom->GetComponentRotation().Yaw-180, 0);
 	if (Turret->GetComponentRotation() != TurretRotation)
 	{
-		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 1.5f);
+		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
 		Turret->SetWorldRotation(currentCameraRotation);
 	}
 	if (TowerRotation != BaseRotation)
 	{
-		FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 1.5f);
+		FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
 		TowerRotation = currentBaseRotation;
 	}
 
