@@ -29,22 +29,23 @@ EBTNodeResult::Type UFindBatteryTask::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	{
 		return EBTNodeResult::Failed;
 	}
-	AActor* Battery = Batteries[FMath::RandRange(0, Batteries.Num() - 1)];
 
-	if ((Cast<ABaseBattery>(Battery)->TeamID == MyController->GetTeamID()) == bIsSameTeam)
+	for (int i = 0; i < Batteries.Num(); i++)
 	{
-
-		/* Find a position that is close to the waypoint. We add a small random to this position to give build predictable patrol patterns  */
-		const FVector SearchOrigin = Battery->GetActorLocation();
-		const FVector Loc = UNavigationSystem::GetRandomPointInNavigableRadius(MyController, SearchOrigin, SearchRadius);
-		// If the location isnt a zero vector, set the target location
-		if (Loc != FVector::ZeroVector)
+		AActor* Battery = Batteries[i];
+		if ((Cast<ABaseBattery>(Battery)->TeamID == MyController->GetTeamID()) == bIsSameTeam)
 		{
-			/* The selected key should be "PatrolLocation" in the BehaviorTree setup */
+			/* Find a position that is close to the waypoint. We add a small random to this position to give build predictable patrol patterns  */
+			const FVector SearchOrigin = Battery->GetActorLocation();
+			const FVector Loc = UNavigationSystem::GetRandomPointInNavigableRadius(MyController, SearchOrigin, SearchRadius);
+
+			/* The selected key should be "TargetLocation" in the BehaviorTree setup */
 			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(BlackboardKey.GetSelectedKeyID(), Loc);
 			return EBTNodeResult::Succeeded;
 		}
 	}
+
+
 
 
 	return EBTNodeResult::Failed;

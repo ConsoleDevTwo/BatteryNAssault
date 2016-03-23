@@ -26,13 +26,14 @@ EBTNodeResult::Type UFindCombatLocationTask::ExecuteTask(UBehaviorTreeComponent&
 		return EBTNodeResult::Failed;
 	}
 
-	FVector SearchOrigin = (Target->GetActorLocation() - MyController->GetCharacter()->GetActorLocation()) / 2;
+	FVector SearchOrigin = (Target->GetActorLocation() + MyController->GetCharacter()->GetActorLocation()) / 2;
 
 	const FVector Loc = UNavigationSystem::GetRandomPointInNavigableRadius(MyController, SearchOrigin, LocationRadius);
 	// If the location isnt a zero vector, set the target location
 	if (Loc != FVector::ZeroVector)
 	{
 		/* The selected key should be "PatrolLocation" in the BehaviorTree setup */
+
 		OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(BlackboardKey.GetSelectedKeyID(), Loc);
 		return EBTNodeResult::Succeeded;
 	}

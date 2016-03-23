@@ -29,6 +29,11 @@ protected:
 	/** called when execution flow controller becomes inactive */
 	virtual void OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 public:
+
+	// The upper threshold of when the mech is done charging it's battery
+	UPROPERTY(EditAnywhere)
+	float UpperThreshhold = 70.0f;
+
 	// The threshold of health
 	UPROPERTY(EditAnywhere)
 	float Threshhold = 20.0f;

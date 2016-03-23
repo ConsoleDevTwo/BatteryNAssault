@@ -78,6 +78,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	AIStates State;
 
+	UPROPERTY(VisibleAnywhere, Category = "Energy")
+	bool bIsCharging;
+
 	// Triggered by the UPawnSensing component when any pawn is spotted
 	UFUNCTION()
 	void OnSeePlayer(APawn* Pawn);
