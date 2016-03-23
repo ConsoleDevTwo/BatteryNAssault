@@ -28,6 +28,9 @@ void AMechAICharacter::BeginPlay()
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = this;
 
+	//attach the turret to the root component
+	Turret->AttachTo(this->GetMesh(), FName("S_WEAPON"));
+
 	// Give the AI a AISight component and attach it to the head
 	AISightComp = GetWorld()->SpawnActor<AAISight>(AAISight::StaticClass(), spawnParams);
 	AISightComp->AttachRootComponentTo(this->GetMesh(), FName("S_WEAPON"));
@@ -37,6 +40,8 @@ void AMechAICharacter::BeginPlay()
 
 	// Deactivate the camera since we are not a player
 	FollowCamera->Deactivate();
+	
+	bIsCharging = false;
 
 	// Get all the wander waypoints in the map
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWanderWaypoint::StaticClass(), m_Waypoints);
@@ -111,7 +116,16 @@ void AMechAICharacter::RotateTower(float DeltaTime)
 {
 	FRotator rot = FindLookRotation();
 
-	if (TowerRotation.Yaw + 5.0f < rot.Yaw || TowerRotation.Yaw - 5.0f > rot.Yaw)
+	const FRotator ActorRot = GetActorRotation();
+	const FRotator TurretRotation = rot;;
+
+	if (Turret->GetComponentRotation() != TurretRotation)
+	{
+		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
+	//	Turret->SetWorldRotation(currentCameraRotation);
+	}
+
+	if (TowerRotation.Yaw + 2.0f < rot.Yaw || TowerRotation.Yaw - 2.0f > rot.Yaw)
 	{
 		// If the bool is true, set it to false
 		if (bIsAtLookDirection)
@@ -142,10 +156,10 @@ void AMechAICharacter::FindNewLookLocation()
 void AMechAICharacter::AttemptToFire()
 {
 	if (!bIsAtLookDirection)
+	{
+		StopFire();
 		return;
+	}
 	
-	
-	// Fire logic is here
-	// Shooting logic is here
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "PewPew - Shooting since no fire logic yet");
+	StartFire();
 }

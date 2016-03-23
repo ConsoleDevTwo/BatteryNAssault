@@ -4,6 +4,7 @@
 #include "BatteryCheckDecorator.h"
 
 #include "MechAIController.h"
+#include "MechAICharacter.h"
 
 // AI module includes
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -27,13 +28,31 @@ bool UBatteryCheckDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& 
 		return false;
 	}
 
-	if (MyController->GetBatteryCharge() <= Threshhold)
+
+	AMechAICharacter* AICharacter = Cast<AMechAICharacter>(MyController->GetPawn());
+	if (!AICharacter)
 	{
-		FString Message = FString::Printf(TEXT("Energy: %.2f :  %.2f"), MyController->GetBatteryCharge(), Threshhold);
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
-		return true;
+		return false;
 	}
 
+	if (MyController->GetBatteryCharge() <= Threshhold)
+	{
+		AICharacter->bIsCharging = true;
+		return true;
+	}
+	else if (AICharacter->bIsCharging)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, "Please");
+		if (MyController->GetBatteryCharge() <= UpperThreshhold)
+		{
+			return true;
+		}
+		else
+		{
+			AICharacter->bIsCharging = false;
+			return false;
+		}
+	}
 	return false;
 }
 
