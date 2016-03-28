@@ -157,8 +157,10 @@ void ABatteryNAssaultCharacter::LookUpAtRate(float Rate)
 
 void ABatteryNAssaultCharacter::MoveForward(float Value)
 {
-
-	CharacterMovement->AddInputVector(GetActorForwardVector() *	CharacterMovement->MaxWalkSpeed * Value * GetWorld()->GetDeltaSeconds());
+	if (Energy > 0)
+	{
+		CharacterMovement->AddInputVector(GetActorForwardVector() *	CharacterMovement->MaxWalkSpeed * Value * GetWorld()->GetDeltaSeconds());
+	}
 	/*
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
