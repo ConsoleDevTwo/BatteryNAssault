@@ -23,9 +23,15 @@ private:
 protected:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AMyProjectile> ProjectileClass;
+
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* Mesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	class UAudioComponent* AudioComp;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		USoundCue* FiringSound;
 	
 	
 	

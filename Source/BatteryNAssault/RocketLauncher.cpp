@@ -14,7 +14,11 @@ ARocketLauncher::ARocketLauncher()
 	Mesh->AttachTo(RootComponent);
 	AttackSpeed = 0.1f;
 	
-
+	ConstructorHelpers::FObjectFinder<USoundCue> RocketLauncherSound(TEXT("SoundCue'/Game/Sound/Weapon/machine1cue.machine1cue'"));
+	FiringSound = RocketLauncherSound.Object;
+	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComp"));
+	AudioComp->AttachTo(RootComponent);
+	AudioComp->bAutoActivate = false;
 
 
 }
@@ -35,6 +39,11 @@ void ARocketLauncher::Attack()
 			GetActorLocation(),
 			this->GetActorRotation(),
 			SpawnParameters);
+		if (FiringSound)
+		{
+
+			AudioComp = UGameplayStatics::SpawnSoundAttached(FiringSound, this->GetRootComponent());
+		}
 	}
 
 
