@@ -55,6 +55,12 @@ void AMechAIController::SetTargetEnemy(APawn* NewTarget)
 
 	if (target->TeamID != GetTeamID())
 	{
+		ABatteryNAssaultCharacter* oldTarget = Cast<ABatteryNAssaultCharacter>(BlackboardComp->GetValueAsObject(TargetEnemyKeyName));
+		if (oldTarget)
+		{
+			oldTarget->bInEnemySight = false;
+		}
+		target->bInEnemySight = true;
 		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
 		BlackboardComp->SetValueAsVector(SightedPosKeyName, NewTarget->GetActorLocation());
 	}

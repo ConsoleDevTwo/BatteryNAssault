@@ -15,7 +15,6 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -82,7 +81,7 @@ protected:
 	class UCameraComponent* FollowCamera;
 	
 
-	/** 
+	/*
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
@@ -120,5 +119,8 @@ public:
 
 	UFUNCTION()
 	float GetEnergy();
+
+	UPROPERTY(VisibleAnywhere)
+	bool bInEnemySight;
 };
 

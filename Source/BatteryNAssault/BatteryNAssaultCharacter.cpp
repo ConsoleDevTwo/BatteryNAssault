@@ -29,6 +29,8 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	MaxHealth = 100.f;
 	Health = MaxHealth;
 
+	bInEnemySight = false;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
