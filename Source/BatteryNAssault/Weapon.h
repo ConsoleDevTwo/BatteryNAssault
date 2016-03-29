@@ -26,6 +26,7 @@ public:
 	FORCEINLINE virtual bool CanAttack() { return TimeToNextAttack <= 0.f; }
 	FORCEINLINE void turnoff() { bIsAttacking = false; }
 
+	virtual void AddAmmo(float value) { AmmoUsed += value; }
 protected:
 	UPROPERTY(EditDefaultsOnly)
 		float AttackSpeed;

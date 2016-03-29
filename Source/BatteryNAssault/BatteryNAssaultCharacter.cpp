@@ -2,6 +2,7 @@
 
 #include "BatteryNAssault.h"
 #include "BatteryNAssaultCharacter.h"
+#include "PowerUp.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABatteryNAssaultCharacter
@@ -80,6 +81,8 @@ void ABatteryNAssaultCharacter::BeginPlay()
 		Weapon = Spawn;
 	}
 	
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APowerUp::StaticClass(), powerUpMechs);
 	ChangeRobotColor();
 }
 
@@ -140,6 +143,11 @@ void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent*
 		IE_Released,
 		this,
 		&ABatteryNAssaultCharacter::StopFire);
+
+	InputComponent->BindAction(TEXT("PowerUp"),
+		IE_Pressed,
+		this,
+		&ABatteryNAssaultCharacter::PowerUp);
 	
 }
 
@@ -201,6 +209,26 @@ void ABatteryNAssaultCharacter::StartFire()
 void ABatteryNAssaultCharacter::StopFire()
 {
 	Weapon->EndAttack();
+}
+
+void ABatteryNAssaultCharacter::PowerUp()
+{
+	for (int i = 0; i < powerUpMechs.Num(); i++)
+	{
+		//Cast the object to the power up class
+		APowerUp* PowerUpMech = Cast<APowerUp>(powerUpMechs[i]);
+		// If power up 
+		if (PowerUpMech)
+		{
+			// check the distanse
+			if (FVector::Dist(PowerUpMech->GetTransform().GetTranslation(), GetTransform().GetTranslation()) <=250.0f)
+			{
+				const bool bAllowShrinking = true;
+				powerUpMechs.RemoveAt(i, 1, bAllowShrinking);
+				PowerUpMech->ExecutePowerUp(this);
+			}
+		}
+	}
 }
 
 void ABatteryNAssaultCharacter::Recharge(float charge)

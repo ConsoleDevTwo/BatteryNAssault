@@ -49,13 +49,7 @@ protected:
 	float EnergyCostPerSecond;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float MaxEnergy;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Energy;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float MaxHealth;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Health;
@@ -72,6 +66,8 @@ protected:
 	UFUNCTION()
 	virtual void StopFire();
 
+	UFUNCTION()
+	virtual void PowerUp();
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -99,6 +95,8 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	// Array of Power up objects
+	TArray<AActor *> powerUpMechs;
 
 private:
 	//Changes the color of the robot depending on the team ID
@@ -106,6 +104,12 @@ private:
 	void ChangeRobotColor();
 
 public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		float MaxHealth;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		float MaxEnergy;
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
@@ -120,5 +124,10 @@ public:
 
 	UFUNCTION()
 	float GetEnergy();
+
+	void AddHealth(float value) { 
+		Health = FMath::Clamp(Health + value, 0.0f, MaxHealth);
+	}
+	void AddAmmo(float value) { Weapon->AddAmmo(value); }
 };
 
