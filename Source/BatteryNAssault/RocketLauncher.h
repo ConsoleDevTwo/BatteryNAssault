@@ -27,7 +27,11 @@ class BATTERYNASSAULT_API ARocketLauncher : public AWeapon
 		UPROPERTY(VisibleAnywhere)
 			UStaticMeshComponent* Mesh;
 
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+		class UAudioComponent* AudioComp;
 
+		UPROPERTY(BlueprintReadOnly, EditAnywhere)
+			USoundCue* FiringSound;
 
 
 

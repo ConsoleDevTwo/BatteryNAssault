@@ -12,6 +12,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
+		//FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
 		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")) {}
 	};
 	static FConstructorStatics ConstructorStatics;
@@ -28,6 +29,8 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 
 	MaxHealth = 100.f;
 	Health = MaxHealth;
+
+	bInEnemySight = false;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -165,8 +168,10 @@ void ABatteryNAssaultCharacter::LookUpAtRate(float Rate)
 
 void ABatteryNAssaultCharacter::MoveForward(float Value)
 {
-
-	CharacterMovement->AddInputVector(GetActorForwardVector() *	CharacterMovement->MaxWalkSpeed * Value * GetWorld()->GetDeltaSeconds());
+	if (Energy > 0)
+	{
+		CharacterMovement->AddInputVector(GetActorForwardVector() *	CharacterMovement->MaxWalkSpeed * Value * GetWorld()->GetDeltaSeconds());
+	}
 	/*
 	if ((Controller != NULL) && (Value != 0.0f))
 	{

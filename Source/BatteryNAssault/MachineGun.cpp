@@ -12,10 +12,14 @@ AMachineGun::AMachineGun()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->AttachTo(RootComponent);
-	AttackSpeed = 0.3f;
+	AttackSpeed = 0.05f;
 	AmmoUsed = 1;
 	
-
+	ConstructorHelpers::FObjectFinder<USoundCue> MachineGunSound(TEXT("SoundCue'/Game/Sound/Weapon/machine1cue.machine1cue'"));
+	FiringSound = MachineGunSound.Object;
+	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComp"));
+	AudioComp->AttachTo(RootComponent);
+	AudioComp->bAutoActivate = false;
 
 }
 void AMachineGun::Attack()
@@ -24,9 +28,8 @@ void AMachineGun::Attack()
 
 	FActorSpawnParameters SpawnParameters;
 
-	
-
 	ABatteryNAssaultCharacter* Character = Cast<ABatteryNAssaultCharacter>(Instigator);
+
 	if (Character)
 	{
 		SpawnParameters.Instigator = Character;
@@ -35,6 +38,11 @@ void AMachineGun::Attack()
 			GetActorLocation(), 
 			Instigator->GetActorRotation(), 
 			SpawnParameters);
+		if (FiringSound)
+		{
+
+			AudioComp = UGameplayStatics::SpawnSoundAttached(FiringSound, this->GetRootComponent());
+		}
 	}
 	
 

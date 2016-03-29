@@ -56,7 +56,10 @@ void AMechAICharacter::Tick(float DeltaTime)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;
 	}
-
+	else
+	{
+		CharacterMovement->MaxWalkSpeed = 0;
+	}
 
 	switch (State)
 	{
