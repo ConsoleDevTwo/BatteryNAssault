@@ -49,6 +49,7 @@ bool USightRangeDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& Ow
 	//if the player is out of the range to chase then return false
 	if (FVector::Dist(SightPosition, EnemyPos) > Range)
 	{
+		Enemy->bInEnemySight = false;
 		BlackboardComp->ClearValue("Enemy");
 		return false;
 	}

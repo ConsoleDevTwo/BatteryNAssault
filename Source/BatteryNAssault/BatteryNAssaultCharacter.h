@@ -132,7 +132,7 @@ public:
 	UFUNCTION()
 	void AddAmmo(float value) { Weapon->AddAmmo(value); }
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bInEnemySight;
 
 };
