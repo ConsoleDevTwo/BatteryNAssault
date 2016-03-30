@@ -56,6 +56,7 @@ void UEnemySpottedService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
 		AICharacter->State = AIStates::SPOTTED;
 	}
 
+
 	AICharacter->LookLocation =  Target->GetActorLocation() + Target->GetVelocity() * DeltaSeconds;
 
 	

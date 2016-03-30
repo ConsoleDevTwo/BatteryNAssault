@@ -20,7 +20,6 @@ ABaseBattery::ABaseBattery()
 void ABaseBattery::BeginPlay()
 {
 	Super::BeginPlay();
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABatteryNAssaultCharacter::StaticClass(), gameMechs);
 }
 
 // Called every frame
@@ -28,10 +27,11 @@ void ABaseBattery::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABatteryNAssaultCharacter::StaticClass(), gameMechs);
 	for (int i = 0; i < gameMechs.Num(); i++)
 	{
 		if (FVector::Dist(gameMechs[i]->GetTransform().GetTranslation(), GetTransform().GetTranslation()) <= 400.0f)
-		{
+		{ 
 			FString Message = gameMechs[i]->GetName();
 			GEngine->AddOnScreenDebugMessage(i + 1, 0.1f, FColor::White, Message);
 
@@ -46,6 +46,8 @@ void ABaseBattery::Tick( float DeltaTime )
 					Character->Recharge(ChargePerSecond*DeltaTime);
 				}
 			}
+
+
 		}
 		// Recharge gameMechs[i]->
 	}

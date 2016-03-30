@@ -259,7 +259,17 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
 
-	Health -= 10;
+
+	ABatteryNAssaultCharacter* damageDealer = Cast<ABatteryNAssaultCharacter>(DamageCauser);
+
+	if (damageDealer)
+	{
+		if (damageDealer->TeamID != this->TeamID)
+		{	
+			Health -= 5;
+		}
+	}
+
 	return 0;
 }
 

@@ -61,6 +61,12 @@ void AMechAICharacter::Tick(float DeltaTime)
 		CharacterMovement->MaxWalkSpeed = 0;
 	}
 
+
+	if (Health <= 0)
+	{
+		Destroy();
+	}
+
 	switch (State)
 	{
 	case AIStates::SEARCHING:
