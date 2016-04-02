@@ -81,6 +81,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Energy")
 	bool bIsCharging;
 
+	UPROPERTY(VisibleAnywhere, Category = "Control")
+	bool Controlled;
+
 	// Triggered by the UPawnSensing component when any pawn is spotted
 	UFUNCTION()
 	void OnSeePlayer(APawn* Pawn);

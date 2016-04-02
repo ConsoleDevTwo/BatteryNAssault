@@ -102,6 +102,9 @@ private:
 	UFUNCTION()
 	void ChangeRobotColor();
 
+	UFUNCTION()
+	void PossessNewMech();
+
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float MaxHealth;

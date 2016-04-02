@@ -42,6 +42,7 @@ void AMechAICharacter::BeginPlay()
 	FollowCamera->Deactivate();
 	
 	bIsCharging = false;
+	Controlled = false;
 
 	// Get all the wander waypoints in the map
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWanderWaypoint::StaticClass(), m_Waypoints);
@@ -52,6 +53,12 @@ void AMechAICharacter::BeginPlay()
 // Called every frame
 void AMechAICharacter::Tick(float DeltaTime)
 {
+	if (Controlled)
+	{
+		Super::Tick(DeltaTime);
+		return;
+	}
+
 	if (Energy > 0)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;

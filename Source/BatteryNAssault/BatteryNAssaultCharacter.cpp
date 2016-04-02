@@ -2,6 +2,7 @@
 
 #include "BatteryNAssault.h"
 #include "BatteryNAssaultCharacter.h"
+#include "MechAICharacter.h"
 #include "PowerUp.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -96,6 +97,11 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 	if (Energy > 0)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;
+	}
+
+	if (Health <= 0)
+	{
+		PossessNewMech();
 	}
 
 	FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
@@ -291,4 +297,29 @@ void ABatteryNAssaultCharacter::ChangeRobotColor()
 	// Set the robots material to the new dynamic material
 	GetMesh()->SetMobility(EComponentMobility::Movable);
 	GetMesh()->SetMaterial(0, DynamicMat);
+}
+
+void ABatteryNAssaultCharacter::PossessNewMech()
+{
+	TArray<AActor*> GameMechs;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMechAICharacter::StaticClass(), GameMechs);
+
+	for (int i = 0; i < GameMechs.Num(); i++)
+	{
+		AMechAICharacter* Mech = Cast<AMechAICharacter>(GameMechs[i]);
+
+		if (Mech)
+		{
+			if (Mech->TeamID == TeamID &&!Mech->Controlled)
+			{
+				FollowCamera->Deactivate();
+				Mech->FollowCamera->Activate(true);
+				Controller->Possess(Mech);
+				Mech->Controlled = true;
+				Mech->CharacterMovement->bOrientRotationToMovement = false;
+				Destroy();
+				return;
+			}
+		}
+	}
 }
