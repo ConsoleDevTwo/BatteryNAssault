@@ -12,7 +12,7 @@ ARocketLauncher::ARocketLauncher()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->AttachTo(RootComponent);
-	AttackSpeed = 0.1f;
+	AttackSpeed = 1.0f;
 	
 	ConstructorHelpers::FObjectFinder<USoundCue> RocketLauncherSound(TEXT("SoundCue'/Game/Sound/Weapon/machine1cue.machine1cue'"));
 	FiringSound = RocketLauncherSound.Object;

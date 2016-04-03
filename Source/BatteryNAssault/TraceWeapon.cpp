@@ -20,7 +20,7 @@ void ATraceWeapon::Attack()
 
 	FVector Start = GetActorLocation();
 
-	FVector Direction = Instigator->GetActorRotation().Vector();
+	FVector Direction = GetActorRotation().Vector();
 	FVector End = Start + Direction * Range;
 
 	FHitResult Impact = WeaponTrace(Start, End);

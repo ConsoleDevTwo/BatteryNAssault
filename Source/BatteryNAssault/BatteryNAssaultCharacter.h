@@ -4,7 +4,7 @@
 #include "Weapon.h"
 #include "BatteryNAssaultCharacter.generated.h"
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class ABatteryNAssaultCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -16,25 +16,25 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseLookUpRate;
 
 	UPROPERTY(EditAnywhere)
-		AWeapon* Weapon;
+		int32 Weapon = 0;
 
 	UFUNCTION()
-	virtual void Recharge ( float charge );
+		virtual void Recharge(float charge);
 
 	virtual float TakeDamage(
-				float DamageAmount,
-				struct FDamageEvent const& DamageEvent,
-				class AController* EventInstigator,
-				class AActor* DamageCauser
-			) override;
+		float DamageAmount,
+	struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator,
+	class AActor* DamageCauser
+		) override;
 
 protected:
 
@@ -45,28 +45,34 @@ protected:
 	void MoveRight(float Value);
 
 	UPROPERTY(EditAnywhere)
-	float EnergyCostPerSecond;
+		float EnergyCostPerSecond;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float Energy;
+		float Energy;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float Health;
+		float Health;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AWeapon> Gun;
+		int32 NumberOfWeapons = 3;
+
+	UPROPERTY(EditAnywhere)
+		TArray< TSubclassOf<AWeapon> > GunClasses;
+
+	UPROPERTY(BlueprintReadOnly)
+		TArray<AWeapon*> Inventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* Turret;
+		USkeletalMeshComponent* Turret;
 
 	UFUNCTION()
-	virtual void StartFire();
+		virtual void StartFire();
 
 	UFUNCTION()
-	virtual void StopFire();
+		virtual void StopFire();
 
 	UFUNCTION()
-	virtual void PowerUp();
+		virtual void PowerUp();
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -75,18 +81,18 @@ protected:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-	
+
 
 	/*
-	 * Called via input to turn at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
+	* Called via input to turn at a given rate.
+	* @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	*/
 	void TurnAtRate(float Rate);
 
 	/**
-	 * Called via input to turn look up/down at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
+	* Called via input to turn look up/down at a given rate.
+	* @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	*/
 	void LookUpAtRate(float Rate);
 
 protected:
@@ -100,10 +106,10 @@ protected:
 private:
 	//Changes the color of the robot depending on the team ID
 	UFUNCTION()
-	void ChangeRobotColor();
+		void ChangeRobotColor();
 
 	UFUNCTION()
-	void PossessNewMech();
+		void PossessNewMech();
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -119,24 +125,33 @@ public:
 
 	// The team ID of this player
 	UPROPERTY(EditAnywhere, Category = "Team")
-	int8 TeamID;
+		int8 TeamID;
 
 	UPROPERTY(EditAnywhere, Category = "Tower")
-	FRotator TowerRotation;
+		FRotator TowerRotation;
 
 	UFUNCTION()
-	float GetEnergy();
+		float GetEnergy();
 
 	UFUNCTION()
-	void AddHealth(float value) { 
+		void AddHealth(float value) {
 		Health = FMath::Clamp(Health + value, 0.0f, MaxHealth);
 	}
 
 	UFUNCTION()
-	void AddAmmo(float value) { Weapon->AddAmmo(value); }
+		void AddAmmo(float value) { Inventory[Weapon]->AddAmmo(value); }
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	bool bInEnemySight;
+		bool bInEnemySight;
+
+	UFUNCTION()
+		void Gun1();
+	UFUNCTION()
+		void Gun2();
+	UFUNCTION()
+		void Gun3();
 
 };
+
+
 

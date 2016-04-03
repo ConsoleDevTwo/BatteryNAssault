@@ -36,7 +36,7 @@ void AMachineGun::Attack()
 		GetWorld()->SpawnActor<AMyProjectile>(
 			ProjectileClass,
 			GetActorLocation(), 
-			Instigator->GetActorRotation(), 
+			GetActorRotation(), 
 			SpawnParameters);
 		if (FiringSound)
 		{

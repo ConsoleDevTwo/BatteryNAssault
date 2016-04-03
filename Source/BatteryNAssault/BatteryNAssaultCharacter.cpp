@@ -10,19 +10,27 @@
 
 ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 {
+
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
-		//FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
-		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")) {}
+		ConstructorHelpers::FObjectFinder<UClass> RocketLauncher;
+		ConstructorHelpers::FObjectFinder<UClass> RayCast;
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")),
+			RocketLauncher(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
+			RayCast(TEXT("Class'/Game/Weapon/ProjectileWeapons/TraceTest.TraceTest_C'")) {}
 	};
 	static FConstructorStatics ConstructorStatics;
 
 	if (ConstructorStatics.MachineGun.Object)
 	{
-		Gun = Cast<UClass>(ConstructorStatics.MachineGun.Object);
+		GunClasses.Emplace(Cast<UClass>(ConstructorStatics.MachineGun.Object));
+		GunClasses.Emplace(Cast<UClass>(ConstructorStatics.RocketLauncher.Object));
+		GunClasses.Emplace(Cast<UClass>(ConstructorStatics.RayCast.Object));
 	}
 	//Temp->K2_SetWorldRotation(FollowCamera.)
+	Inventory.SetNum(NumberOfWeapons);
+	GunClasses.SetNum(NumberOfWeapons);
 
 	EnergyCostPerSecond = 0.5f;
 	MaxEnergy = 100.f;
@@ -74,17 +82,24 @@ void ABatteryNAssaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.Owner = this;
-	SpawnParameters.Instigator = this;
-	AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(Gun, SpawnParameters);
-	if (Spawn)
+
+	for (Weapon = 0; Weapon <= NumberOfWeapons-1; Weapon++)
 	{
-		Spawn->AttachRootComponentTo(Turret,"FirePoint", EAttachLocation::SnapToTarget);
-		//Spawn->AttachRootComponentTo(Turret);
-		Weapon = Spawn;
+
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.Owner = this;
+		SpawnParameters.Instigator = this;
+		AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(GunClasses[Weapon], SpawnParameters);
+		if (Spawn)
+		{
+			Spawn->AttachRootComponentTo(Turret, "FirePoint", EAttachLocation::SnapToTarget);
+			//Spawn->AttachRootComponentTo(Turret);
+			Inventory[Weapon] = Spawn;
+			
+		}
 	}
-	
+	Weapon = 0;
+
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APowerUp::StaticClass(), powerUpMechs);
 	ChangeRobotColor();
@@ -108,7 +123,7 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
 	const FRotator ActorRot = GetActorRotation();
 	const FRotator BaseRotation(0, CameraBoom->GetComponentRotation().Yaw - ActorRot.Yaw, 0);
-	const FRotator TurretRotation(-CameraBoom->GetComponentRotation().Pitch - ActorRot.Pitch, CameraBoom->GetComponentRotation().Yaw-180, 0);
+	const FRotator TurretRotation(-CameraBoom->GetComponentRotation().Pitch - ActorRot.Pitch, CameraBoom->GetComponentRotation().Yaw - 180, 0);
 	if (Turret->GetComponentRotation() != TurretRotation)
 	{
 		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
@@ -157,7 +172,20 @@ void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent*
 		IE_Pressed,
 		this,
 		&ABatteryNAssaultCharacter::PowerUp);
-	
+	InputComponent->BindAction(TEXT("Gun1"),
+		IE_Released,
+		this,
+		&ABatteryNAssaultCharacter::Gun1);
+	InputComponent->BindAction(TEXT("Gun2"),
+		IE_Released,
+		this,
+		&ABatteryNAssaultCharacter::Gun2);
+	InputComponent->BindAction(TEXT("Gun3"),
+		IE_Released,
+		this,
+		&ABatteryNAssaultCharacter::Gun3);
+
+
 }
 
 void ABatteryNAssaultCharacter::TurnAtRate(float Rate)
@@ -181,13 +209,13 @@ void ABatteryNAssaultCharacter::MoveForward(float Value)
 	/*
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
-		// find out which way is forward
-		const FRotator Rotation = GetActorRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	// find out which way is forward
+	const FRotator Rotation = GetActorRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+	// get forward vector
+	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	AddMovementInput(Direction, Value);
 	}
 	*/
 }
@@ -199,14 +227,14 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
 
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
+	// find out which way is right
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// get right vector
+	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	// add movement in that direction
+	AddMovementInput(Direction, Value);
 	}
 	*/
 
@@ -214,12 +242,19 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 
 void ABatteryNAssaultCharacter::StartFire()
 {
-	Weapon->StartAttack();
+	
+	if (Inventory[Weapon])
+	{
+		Inventory[Weapon]->StartAttack();
+		
+	}
+	
 }
 
 void ABatteryNAssaultCharacter::StopFire()
 {
-	Weapon->EndAttack();
+	if (Inventory[Weapon])
+		Inventory[Weapon]->EndAttack();
 }
 
 void ABatteryNAssaultCharacter::PowerUp()
@@ -232,7 +267,7 @@ void ABatteryNAssaultCharacter::PowerUp()
 		if (PowerUpMech)
 		{
 			// check the distanse
-			if (FVector::Dist(PowerUpMech->GetTransform().GetTranslation(), GetTransform().GetTranslation()) <=250.0f)
+			if (FVector::Dist(PowerUpMech->GetTransform().GetTranslation(), GetTransform().GetTranslation()) <= 250.0f)
 			{
 				const bool bAllowShrinking = true;
 				powerUpMechs.RemoveAt(i, 1, bAllowShrinking);
@@ -258,9 +293,9 @@ float ABatteryNAssaultCharacter::GetEnergy()
 
 float ABatteryNAssaultCharacter::TakeDamage(
 	float DamageAmount,
-	struct FDamageEvent const& DamageEvent,
-	class AController* EventInstigator,
-	class AActor* DamageCauser)
+struct FDamageEvent const& DamageEvent,
+class AController* EventInstigator,
+class AActor* DamageCauser)
 {
 	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
@@ -271,7 +306,7 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	if (damageDealer)
 	{
 		if (damageDealer->TeamID != this->TeamID)
-		{	
+		{
 			Health -= 5;
 		}
 	}
@@ -322,4 +357,40 @@ void ABatteryNAssaultCharacter::PossessNewMech()
 			}
 		}
 	}
+}
+void ABatteryNAssaultCharacter::Gun1()
+{
+	if (Inventory[0] && Weapon != 0)
+	{
+		Inventory[Weapon]->SetActorHiddenInGame(true);
+		Inventory[Weapon]->turnoff();
+		Weapon = 0;
+		Inventory[Weapon]->SetActorHiddenInGame(false);
+
+	}
+
+}
+void ABatteryNAssaultCharacter::Gun2()
+{
+	if (Inventory[1] && Weapon != 1)
+	{
+		Inventory[Weapon]->SetActorHiddenInGame(true);
+		Inventory[Weapon]->turnoff();
+		Weapon = 1;
+		Inventory[Weapon]->SetActorHiddenInGame(false);
+
+	}
+
+}
+void ABatteryNAssaultCharacter::Gun3()
+{
+	if (Inventory[1] && Weapon != 2)
+	{
+		Inventory[Weapon]->SetActorHiddenInGame(true);
+		Inventory[Weapon]->turnoff();
+		Weapon = 2;
+		Inventory[Weapon]->SetActorHiddenInGame(false);
+
+	}
+
 }
