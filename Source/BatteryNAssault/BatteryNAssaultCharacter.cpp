@@ -30,6 +30,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 
 	MaxHealth = 100.f;
 	Health = MaxHealth;
+	DeathState = false;
 
 	bInEnemySight = false;
 
@@ -90,6 +91,15 @@ void ABatteryNAssaultCharacter::BeginPlay()
 	ChangeRobotColor();
 }
 
+void ABatteryNAssaultCharacter::DeathFunc()
+{
+	if (DeathState) return;
+
+	DeathState = true;
+	Health = 0;
+	Energy = 0;
+}
+
 void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -97,6 +107,10 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 	if (Energy > 0)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;
+	}
+	else if (!DeathState)
+	{
+		DeathFunc();
 	}
 
 	if (Health <= 0)

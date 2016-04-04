@@ -68,6 +68,12 @@ protected:
 	UFUNCTION()
 	virtual void PowerUp();
 
+	UFUNCTION()
+	void DeathFunc();
+
+	UPROPERTY(EditAnywhere)
+	bool DeathState;
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
