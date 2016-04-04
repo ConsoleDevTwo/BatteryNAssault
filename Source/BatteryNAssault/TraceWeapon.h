@@ -27,6 +27,7 @@ protected:
 		float DamageDealt;
 	UPROPERTY(EditDefaultsOnly)
 		float Range;
+	
 
 	FHitResult WeaponTrace(FVector &TraceFrom, FVector &TraceTo);
 

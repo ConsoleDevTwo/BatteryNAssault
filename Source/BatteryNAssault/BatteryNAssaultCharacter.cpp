@@ -16,7 +16,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
 		ConstructorHelpers::FObjectFinder<UClass> RocketLauncher;
 		ConstructorHelpers::FObjectFinder<UClass> RayCast;
-		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")),
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ShotGun/ShotGun.ShotGun_C'")),
 			RocketLauncher(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
 			RayCast(TEXT("Class'/Game/Weapon/ProjectileWeapons/TraceTest.TraceTest_C'")) {}
 	};
