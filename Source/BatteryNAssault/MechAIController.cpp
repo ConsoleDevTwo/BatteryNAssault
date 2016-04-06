@@ -53,7 +53,7 @@ void AMechAIController::SetTargetEnemy(APawn* NewTarget)
 
 	ABatteryNAssaultCharacter* target = Cast<ABatteryNAssaultCharacter>(NewTarget);
 
-	if (target->TeamID != GetTeamID())
+	if (target->TeamID != GetTeamID() && !target->DeathState)
 	{
 		ABatteryNAssaultCharacter* oldTarget = Cast<ABatteryNAssaultCharacter>(BlackboardComp->GetValueAsObject(TargetEnemyKeyName));
 		if (oldTarget)

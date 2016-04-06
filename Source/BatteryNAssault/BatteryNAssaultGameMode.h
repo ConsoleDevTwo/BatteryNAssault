@@ -10,6 +10,9 @@ class ABatteryNAssaultGameMode : public AGameMode
 
 public:
 	ABatteryNAssaultGameMode();
+
+	// Called every frame
+	virtual void Tick(float DeltaSeconds) override;
 };
 
 

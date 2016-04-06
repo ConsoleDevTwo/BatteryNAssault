@@ -36,6 +36,8 @@ public:
 				class AActor* DamageCauser
 			) override;
 
+	UPROPERTY(EditAnywhere)
+		bool DeathState;
 protected:
 
 	/** Called for forwards/backward input */
@@ -70,9 +72,6 @@ protected:
 
 	UFUNCTION()
 	void DeathFunc();
-
-	UPROPERTY(EditAnywhere)
-	bool DeathState;
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

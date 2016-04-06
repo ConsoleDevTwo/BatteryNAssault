@@ -104,13 +104,11 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (DeathState) 
+		return;
 	if (Energy > 0)
 	{
 		Energy -= EnergyCostPerSecond * DeltaTime;
-	}
-	else if (!DeathState)
-	{
-		DeathFunc();
 	}
 
 	if (Health <= 0)
@@ -336,4 +334,18 @@ void ABatteryNAssaultCharacter::PossessNewMech()
 			}
 		}
 	}
+
+	//RootComponent = FollowCamera;
+	for (int i = 0; i < RootComponent->GetNumChildrenComponents(); i++)
+	{
+		if(RootComponent->GetChildComponent(i) != FollowCamera)
+			RootComponent->GetChildComponent(i)->DestroyComponent();
+	}
+	Mesh->DestroyComponent();
+	Turret->DestroyComponent();
+	FollowCamera->SetRelativeLocationAndRotation(FVector(0, 0, 500), FRotator(-45, 0, 0));;
+
+	DeathState = true;
+
+
 }
