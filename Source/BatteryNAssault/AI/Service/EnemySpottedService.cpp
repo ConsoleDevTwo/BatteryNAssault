@@ -41,7 +41,7 @@ void UEnemySpottedService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
 
 	// Get the enemy and see if it exists
 	ABatteryNAssaultCharacter* Target = Cast<ABatteryNAssaultCharacter>(BlackboardComp->GetValueAsObject(GetSelectedBlackboardKey()));
-	if (!Target)
+	if (!Target || Target->DeathState)
 	{
 		if (AICharacter->State != AIStates::SEARCHING)
 		{
