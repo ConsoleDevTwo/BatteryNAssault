@@ -148,5 +148,14 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float TimeUntilOver;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* DamageComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* DestroyComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* OnHitComponent;
 };
 
