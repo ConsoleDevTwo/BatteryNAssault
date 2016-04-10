@@ -33,6 +33,8 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	DeathState = false;
 
 	bInEnemySight = false;
+	bGameIsOver = false;
+	TimeUntilOver = 2.0f;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -104,6 +106,14 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bGameIsOver)
+	{
+		TimeUntilOver -= DeltaTime;
+		if (TimeUntilOver <= 0)
+		{
+			UGameplayStatics::OpenLevel(GetWorld(), "MainMenu");
+		}
+	}
 	if (DeathState) 
 		return;
 	if (Energy > 0)

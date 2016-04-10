@@ -143,5 +143,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bInEnemySight;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	bool bGameIsOver;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float TimeUntilOver;
 };
 

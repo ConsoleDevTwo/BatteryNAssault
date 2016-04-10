@@ -64,6 +64,7 @@ void ABatteryNAssaultGameMode::Tick(float DeltaSeconds)
 		ABatteryNAssaultCharacter *mech = Cast<ABatteryNAssaultCharacter>(controller->GetPawn());
 		if(mech)
 		{
+			mech->bGameIsOver = true;
 			if (mech->TeamID == Winner)
 			{
 				FString Message = "GameOver - Winner";
