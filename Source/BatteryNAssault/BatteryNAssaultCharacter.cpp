@@ -80,6 +80,17 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	TeamID = 0;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	//Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	//DOREPLIFETIME(ABatteryNAssaultCharacter, TowerRotation);
+}
+
+void ABatteryNAssaultCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(ABatteryNAssaultCharacter, TowerRotation);
 }
 
 void ABatteryNAssaultCharacter::BeginPlay()
@@ -179,11 +190,23 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
 		Turret->SetWorldRotation(currentCameraRotation);
 	}
+
+	//if (Role == ROLE_Authority)
+	if( HasAuthority() )
+	{
+		if (TowerRotation != BaseRotation)
+		{
+			FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
+			TowerRotation = currentBaseRotation;
+		}
+	}
+	/*
 	if (TowerRotation != BaseRotation)
 	{
 		FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
 		TowerRotation = currentBaseRotation;
 	}
+	*/
 
 	//const FRotator CameraRot = FollowCamera->GetComponentRotation();
 
@@ -260,6 +283,22 @@ void ABatteryNAssaultCharacter::MoveForward(float Value)
 void ABatteryNAssaultCharacter::MoveRight(float Value)
 {
 	AddActorWorldRotation(FRotator(0.0f, Value * BaseTurnRate * GetWorld()->GetDeltaSeconds(), 0));
+
+	if (HasAuthority())
+	{
+		FString Message = "Move Riight";
+//		FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
+	}
+	/*
+	else
+	{
+
+		FString Message = FString::Printf( TEXT("%.2f"), Value);
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
+	}*/
+
+	//AddControllerYawInput(Value * GetWorld()->GetDeltaSeconds());
 	/*
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{

@@ -2,6 +2,7 @@
 #pragma once
 #include "GameFramework/Character.h"
 #include "Weapon.h"
+#include "UnrealNetwork.h"
 #include "BatteryNAssaultCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -14,6 +15,8 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
@@ -133,7 +136,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Team")
 	int8 TeamID;
 
-	UPROPERTY(EditAnywhere, Category = "Tower")
+	UPROPERTY(EditAnywhere, Replicated, Category = "Tower")
 	FRotator TowerRotation;
 
 	UFUNCTION()
