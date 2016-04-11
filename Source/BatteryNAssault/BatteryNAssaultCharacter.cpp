@@ -13,17 +13,26 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
+		ConstructorHelpers::FObjectFinder<UClass> Shotgun;
+		ConstructorHelpers::FObjectFinder<UClass> GrenadeLauncher;
+
 		//FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
-		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")) {}
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
+								Shotgun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
+								GrenadeLauncher(TEXT("Class'/Game/Weapon/ProjectileWeapons/GrenadeLauncher/GrenadeLauncher.GrenadeLauncher_C'")) {}
 	};
+
 	static FConstructorStatics ConstructorStatics;
+
 
 	if (ConstructorStatics.MachineGun.Object)
 	{
 		Gun = Cast<UClass>(ConstructorStatics.MachineGun.Object);
 	}
+
 	//Temp->K2_SetWorldRotation(FollowCamera.)
 
+	WeaponInd = 0; // Index of currently equipped weapon
 	EnergyCostPerSecond = 0.5f;
 	MaxEnergy = 100.f;
 	Energy = MaxEnergy;
@@ -88,7 +97,6 @@ void ABatteryNAssaultCharacter::BeginPlay()
 		Weapon = Spawn;
 	}
 	
-
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APowerUp::StaticClass(), powerUpMechs);
 	ChangeRobotColor();
 }
@@ -100,6 +108,41 @@ void ABatteryNAssaultCharacter::DeathFunc()
 	DeathState = true;
 	Health = 0;
 	Energy = 0;
+}
+
+void ABatteryNAssaultCharacter::ChangeWeapon(int32 ind)
+{
+	if (WeaponInd == ind) return;
+
+	FString Message = FString::Printf(TEXT("Changed Weapon ID: %d"), ind);
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
+	
+	if (ind == 0) // Machine Gun
+	{
+		Gun = GunTypes[0];
+	}
+	else if (ind == 1) // Shotgun
+	{
+		Gun = GunTypes[1];
+	}
+	else if (ind == 2) // Rocket Launcher
+	{
+		Gun = GunTypes[2];
+	}
+
+	Weapon->Destroy();
+
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	SpawnParameters.Instigator = this;
+	AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(Gun, SpawnParameters);
+	if (Spawn)
+	{
+		Spawn->AttachRootComponentTo(Turret, "FirePoint", EAttachLocation::SnapToTarget);
+		Weapon = Spawn;
+	}
+
+	WeaponInd = ind;
 }
 
 void ABatteryNAssaultCharacter::Tick(float DeltaTime)

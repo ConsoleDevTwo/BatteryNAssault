@@ -38,6 +38,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		bool DeathState;
+
+	UFUNCTION(BlueprintCallable, Category = "Loadout")
+		void ChangeWeapon(int32 ind);
+
 protected:
 
 	/** Called for forwards/backward input */
@@ -54,6 +58,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Health;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	int32 WeaponInd;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> Gun;
@@ -148,5 +155,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float TimeUntilOver;
+
+	UPROPERTY(Category = Guns, EditAnywhere)
+		TArray<TSubclassOf<AWeapon>> GunTypes;
+
+	//UPROPERTY(EditAnywhere)
+		//ConstructorHelpers::FObjectFinder<UClass> MachineGun = (TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'"));
 };
 
