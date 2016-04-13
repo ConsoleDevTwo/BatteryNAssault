@@ -2,6 +2,7 @@
 #pragma once
 #include "GameFramework/Character.h"
 #include "Weapon.h"
+#include "UnrealNetwork.h"
 #include "BatteryNAssaultCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -14,6 +15,8 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
@@ -38,6 +41,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		bool DeathState;
+
+	UFUNCTION(BlueprintCallable, Category = "Loadout")
+		void ChangeWeapon(int32 ind);
+
 protected:
 
 	/** Called for forwards/backward input */
@@ -54,6 +61,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Health;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	int32 WeaponInd;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> Gun;
@@ -126,7 +136,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Team")
 	int8 TeamID;
 
-	UPROPERTY(EditAnywhere, Category = "Tower")
+	UPROPERTY(EditAnywhere, Replicated, Category = "Tower")
 	FRotator TowerRotation;
 
 	UFUNCTION()
@@ -149,13 +159,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float TimeUntilOver;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
-	class UParticleSystemComponent* DamageComponent;
+	UPROPERTY(Category = Guns, EditAnywhere)
+		TArray<TSubclassOf<AWeapon>> GunTypes;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
-	class UParticleSystemComponent* DestroyComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
-	class UParticleSystemComponent* OnHitComponent;
+	//UPROPERTY(EditAnywhere)
+		//ConstructorHelpers::FObjectFinder<UClass> MachineGun = (TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'"));
 };
 

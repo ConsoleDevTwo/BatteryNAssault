@@ -13,16 +13,26 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinder<UClass> MachineGun;
+		ConstructorHelpers::FObjectFinder<UClass> Shotgun;
+		ConstructorHelpers::FObjectFinder<UClass> GrenadeLauncher;
+
 		//FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
-		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")) {}
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
+								Shotgun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
+								GrenadeLauncher(TEXT("Class'/Game/Weapon/ProjectileWeapons/GrenadeLauncher/GrenadeLauncher.GrenadeLauncher_C'")) {}
 	};
+
 	static FConstructorStatics ConstructorStatics;
+
 
 	if (ConstructorStatics.MachineGun.Object)
 	{
 		Gun = Cast<UClass>(ConstructorStatics.MachineGun.Object);
 	}
+
 	//Temp->K2_SetWorldRotation(FollowCamera.)
+
+	WeaponInd = 0; // Index of currently equipped weapon
 	EnergyCostPerSecond = 0.5f;
 	MaxEnergy = 100.f;
 	Energy = MaxEnergy;
@@ -67,34 +77,20 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> Damage(TEXT("ParticleSystem'/Game/StarterContent/Particles/DestoryP.DestoryP'"));
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> Explosion(TEXT("ParticleSystem'/Game/StarterContent/Particles/FireP.FireP'"));
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> OnHit(TEXT("ParticleSystem'/Game/StarterContent/Particles/HitP.HitP'"));
-
-	DamageComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
-	DestroyComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestoryParticle"));
-	OnHitComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnHitParticle"));
-
-	DamageComponent->bAutoActivate = false;
-	DestroyComponent->bAutoActivate = false;
-	OnHitComponent->bAutoActivate = false;
-
-	DamageComponent->Template = Damage.Object;
-	DestroyComponent->Template = Explosion.Object;
-	OnHitComponent->Template = OnHit.Object;
-
-	DamageComponent->AttachTo(RootComponent);
-	DestroyComponent->AttachTo(RootComponent);
-	OnHitComponent->AttachTo(RootComponent);
-
-	//DamageComponent->DeactivateSystem();
-	//DestroyComponent->DeactivateSystem();
-	//OnHitComponent->DeactivateSystem();
-
-
 	TeamID = 0;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	//Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	//DOREPLIFETIME(ABatteryNAssaultCharacter, TowerRotation);
+}
+
+void ABatteryNAssaultCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(ABatteryNAssaultCharacter, TowerRotation);
 }
 
 void ABatteryNAssaultCharacter::BeginPlay()
@@ -112,7 +108,6 @@ void ABatteryNAssaultCharacter::BeginPlay()
 		Weapon = Spawn;
 	}
 	
-
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APowerUp::StaticClass(), powerUpMechs);
 	ChangeRobotColor();
 }
@@ -121,8 +116,44 @@ void ABatteryNAssaultCharacter::DeathFunc()
 {
 	if (DeathState) return;
 
+	DeathState = true;
 	Health = 0;
 	Energy = 0;
+}
+
+void ABatteryNAssaultCharacter::ChangeWeapon(int32 ind)
+{
+	if (WeaponInd == ind) return;
+
+	FString Message = FString::Printf(TEXT("Changed Weapon ID: %d"), ind);
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
+	
+	if (ind == 0) // Machine Gun
+	{
+		Gun = GunTypes[0];
+	}
+	else if (ind == 1) // Shotgun
+	{
+		Gun = GunTypes[1];
+	}
+	else if (ind == 2) // Rocket Launcher
+	{
+		Gun = GunTypes[2];
+	}
+
+	Weapon->Destroy();
+
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	SpawnParameters.Instigator = this;
+	AWeapon *Spawn = GetWorld()->SpawnActor<AWeapon>(Gun, SpawnParameters);
+	if (Spawn)
+	{
+		Spawn->AttachRootComponentTo(Turret, "FirePoint", EAttachLocation::SnapToTarget);
+		Weapon = Spawn;
+	}
+
+	WeaponInd = ind;
 }
 
 void ABatteryNAssaultCharacter::Tick(float DeltaTime)
@@ -146,7 +177,6 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 
 	if (Health <= 0)
 	{
-		DestroyComponent->ActivateSystem();
 		PossessNewMech();
 	}
 
@@ -160,11 +190,23 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 		FRotator currentCameraRotation = FMath::RInterpTo(Turret->GetComponentRotation(), TurretRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
 		Turret->SetWorldRotation(currentCameraRotation);
 	}
+
+	//if (Role == ROLE_Authority)
+	if( HasAuthority() )
+	{
+		if (TowerRotation != BaseRotation)
+		{
+			FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
+			TowerRotation = currentBaseRotation;
+		}
+	}
+	/*
 	if (TowerRotation != BaseRotation)
 	{
 		FRotator currentBaseRotation = FMath::RInterpTo(TowerRotation, BaseRotation, GetWorld()->GetDeltaSeconds(), 3.0f);
 		TowerRotation = currentBaseRotation;
 	}
+	*/
 
 	//const FRotator CameraRot = FollowCamera->GetComponentRotation();
 
@@ -241,6 +283,22 @@ void ABatteryNAssaultCharacter::MoveForward(float Value)
 void ABatteryNAssaultCharacter::MoveRight(float Value)
 {
 	AddActorWorldRotation(FRotator(0.0f, Value * BaseTurnRate * GetWorld()->GetDeltaSeconds(), 0));
+
+	if (HasAuthority())
+	{
+		FString Message = "Move Riight";
+//		FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
+	}
+	/*
+	else
+	{
+
+		FString Message = FString::Printf( TEXT("%.2f"), Value);
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
+	}*/
+
+	//AddControllerYawInput(Value * GetWorld()->GetDeltaSeconds());
 	/*
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
@@ -312,17 +370,12 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	//Destroy();
 
 
-	if (Health <= MaxHealth / 2)
-	{
-		DamageComponent->ActivateSystem();
-	}
 	ABatteryNAssaultCharacter* damageDealer = Cast<ABatteryNAssaultCharacter>(DamageCauser);
 
 	if (damageDealer)
 	{
 		if (damageDealer->TeamID != this->TeamID)
 		{	
-			damageDealer->OnHitComponent->ActivateSystem();
 			Health -= 5;
 		}
 	}
