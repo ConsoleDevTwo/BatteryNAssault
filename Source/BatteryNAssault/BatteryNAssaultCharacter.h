@@ -153,6 +153,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bInEnemySight;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* DamageComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* DestroyComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* OnHitComponent;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bGameIsOver;
 

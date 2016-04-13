@@ -75,7 +75,28 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relativHitComponent->AttachTo(RootComponent);
+
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> Damage(TEXT("ParticleSystem'/Game/StarterContent/Particles/DestoryP.DestoryP'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> Explosion(TEXT("ParticleSystem'/Game/StarterContent/Particles/FireP.FireP'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> OnHit(TEXT("ParticleSystem'/Game/StarterContent/Particles/HitP.HitP'"));
+
+	DamageComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
+	DestroyComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestoryParticle"));
+	OnHitComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnHitParticle"));
+
+	DamageComponent->bAutoActivate = false;
+	DestroyComponent->bAutoActivate = false;
+	OnHitComponent->bAutoActivate = false;
+
+	DamageComponent->Template = Damage.Object;
+	DestroyComponent->Template = Explosion.Object;
+	OnHitComponent->Template = OnHit.Object;
+
+	DamageComponent->AttachTo(RootComponent);
+	DestroyComponent->AttachTo(RootComponent);
+	OnHitComponent->AttachTo(RootComponent);
 
 	TeamID = 0;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -177,6 +198,7 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 
 	if (Health <= 0)
 	{
+		DestroyComponent->ActivateSystem();
 		PossessNewMech();
 	}
 
@@ -369,6 +391,11 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
 
+	if (Health <= MaxHealth / 2)
+	{
+		DamageComponent->ActivateSystem();
+	}
+
 
 	ABatteryNAssaultCharacter* damageDealer = Cast<ABatteryNAssaultCharacter>(DamageCauser);
 
@@ -376,6 +403,7 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	{
 		if (damageDealer->TeamID != this->TeamID)
 		{	
+			damageDealer->OnHitComponent->ActivateSystem();
 			Health -= 5;
 		}
 	}
