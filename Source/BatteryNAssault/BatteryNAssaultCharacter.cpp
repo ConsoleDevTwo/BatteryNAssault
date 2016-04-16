@@ -4,6 +4,7 @@
 #include "BatteryNAssaultCharacter.h"
 #include "MechAICharacter.h"
 #include "PowerUp.h"
+#include "BehaviorTree/BehaviorTree.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABatteryNAssaultCharacter
@@ -48,6 +49,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
+	OnActorHit.AddDynamic(this, &ABatteryNAssaultCharacter::OnCollision);
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
@@ -468,4 +470,29 @@ void ABatteryNAssaultCharacter::PossessNewMech()
 	DeathState = true;
 
 
+}
+
+void ABatteryNAssaultCharacter::OnCollision(AActor* SelfActor, AActor *OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	ABatteryNAssaultCharacter* other = Cast<ABatteryNAssaultCharacter>(OtherActor);
+	if (other)
+	{
+		FVector Direction = OtherActor->GetActorLocation() - SelfActor->GetActorLocation();
+		Direction.Normalize();
+
+		CharacterMovement->Velocity -= (Direction * 2000) + FVector::UpVector * 1000;
+		AMechAICharacter* AI = Cast<AMechAICharacter>(other);
+
+		UGameplayStatics::ApplyDamage(
+			OtherActor,
+			1,
+			GetController(),
+			this,
+			UDamageType::StaticClass());
+		if (AI)
+		{
+			AI->IsStunned = true;
+			AI->StunTime = 0;
+		}
+	}
 }

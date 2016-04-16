@@ -80,6 +80,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Energy")
 	bool bIsCharging;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Control")
+	bool IsStunned;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Control")
+	float StunTime;
 
 	UPROPERTY(VisibleAnywhere, Category = "Control")
 	bool Controlled;

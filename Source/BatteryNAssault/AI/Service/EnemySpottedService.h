@@ -16,6 +16,9 @@ class BATTERYNASSAULT_API UEnemySpottedService : public UBTService_BlackboardBas
 public:
 	UEnemySpottedService();
 
+	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
+	FName StunTarget = "Stunned";
+
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 

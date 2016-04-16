@@ -40,10 +40,13 @@ public:
 			) override;
 
 	UPROPERTY(EditAnywhere)
-		bool DeathState;
+	bool DeathState;
 
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
-		void ChangeWeapon(int32 ind);
+	void ChangeWeapon(int32 ind);
+
+	UFUNCTION()
+	void OnCollision(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
 protected:
 

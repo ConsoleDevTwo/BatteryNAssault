@@ -18,6 +18,8 @@ AMechAICharacter::AMechAICharacter()
 	WaypointToPlayerDistance = 100.0f;
 
 	TowerRotationSpeed = 5.0f;
+	IsStunned = false;
+	StunTime = 0;
 }
 
 // Called when the game starts or when spawned
@@ -27,7 +29,7 @@ void AMechAICharacter::BeginPlay()
 
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = this;
-
+	
 	//attach the turret to the root component
 	Turret->AttachTo(this->GetMesh(), FName("S_WEAPON"));
 
@@ -68,6 +70,15 @@ void AMechAICharacter::Tick(float DeltaTime)
 		CharacterMovement->MaxWalkSpeed = 0;
 	}
 
+	if (IsStunned)
+	{
+		StunTime += DeltaTime;
+		if (StunTime >= 1)
+		{
+			IsStunned = false;
+			StunTime = 0;
+		}
+	}
 
 	if (Health <= 0)
 	{

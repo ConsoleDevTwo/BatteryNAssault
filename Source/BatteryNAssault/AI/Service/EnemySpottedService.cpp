@@ -39,8 +39,11 @@ void UEnemySpottedService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
 		return;
 
 
+	BlackboardComp->SetValueAsBool(StunTarget, AICharacter->IsStunned);
+
 	// Get the enemy and see if it exists
 	ABatteryNAssaultCharacter* Target = Cast<ABatteryNAssaultCharacter>(BlackboardComp->GetValueAsObject(GetSelectedBlackboardKey()));
+
 	if (!Target || Target->DeathState)
 	{
 		if (AICharacter->State != AIStates::SEARCHING)
