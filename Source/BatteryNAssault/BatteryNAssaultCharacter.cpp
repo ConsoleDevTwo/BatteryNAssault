@@ -84,23 +84,24 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> Explosion(TEXT("ParticleSystem'/Game/StarterContent/Particles/FireP.FireP'"));
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> OnHit(TEXT("ParticleSystem'/Game/StarterContent/Particles/HitP.HitP'"));
 
-	DamageComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
-	DestroyComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestoryParticle"));
+	DamageParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
+	DestroyParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestoryParticle"));
 	OnHitComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnHitParticle"));
 
-	DamageComponent->bAutoActivate = false;
-	DestroyComponent->bAutoActivate = false;
+	DamageParticle->bAutoActivate = false;
+	DestroyParticle->bAutoActivate = false;
 	OnHitComponent->bAutoActivate = false;
 
-	DamageComponent->Template = Damage.Object;
-	DestroyComponent->Template = Explosion.Object;
+	DamageParticle->Template = Explosion.Object;
+	DestroyParticle->Template = Damage.Object;
 	OnHitComponent->Template = OnHit.Object;
 
-	DamageComponent->AttachTo(RootComponent);
-	DestroyComponent->AttachTo(RootComponent);
+	DamageParticle->AttachTo(RootComponent);
+	DestroyParticle->AttachTo(RootComponent);
 	OnHitComponent->AttachTo(RootComponent);
 
 	TeamID = 0;
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
@@ -200,7 +201,6 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 
 	if (Health <= 0)
 	{
-		DestroyComponent->ActivateSystem();
 		PossessNewMech();
 	}
 
@@ -238,7 +238,7 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 
 //////////////////////////////////////////////////////////////////////////
 // Input
-
+ 
 void ABatteryNAssaultCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	// Set up gameplay key bindings
@@ -393,9 +393,13 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
 
-	if (Health <= MaxHealth / 2)
+	if (Health < 50)
 	{
-		DamageComponent->ActivateSystem();
+		DamageParticle->ActivateSystem();
+	}
+	if (Health < 25)
+	{
+		DestroyParticle->ActivateSystem();
 	}
 
 
@@ -405,7 +409,7 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	{
 		if (damageDealer->TeamID != this->TeamID)
 		{	
-			damageDealer->OnHitComponent->ActivateSystem();
+			this->OnHitComponent->ActivateSystem();
 			Health -= 5;
 		}
 	}
