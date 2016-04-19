@@ -20,10 +20,6 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ParticleSystem)
-		UParticleSystem* flame;
-
-
 
 protected:
 	
@@ -32,7 +28,7 @@ protected:
 		void OnBeginOverlap(AActor* OtherActor) override;
 
 		float Acceleration;
-		float Speed = 1;
+		float Speed = 1000.0f;
 	
 	
 	

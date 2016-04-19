@@ -29,6 +29,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 		USphereComponent* Collider;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ParticleSystem)
+		UParticleSystem* flame;
 protected:
 	UFUNCTION()
 		virtual void OnBeginOverlap(AActor* OtherActor);
