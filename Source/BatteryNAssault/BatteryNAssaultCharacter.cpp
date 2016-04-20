@@ -83,20 +83,26 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> Damage(TEXT("ParticleSystem'/Game/StarterContent/Particles/DestoryP.DestoryP'"));
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> Explosion(TEXT("ParticleSystem'/Game/StarterContent/Particles/FireP.FireP'"));
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> OnHit(TEXT("ParticleSystem'/Game/StarterContent/Particles/HitP.HitP'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> GunPart(TEXT("ParticleSystem'/Game/StarterContent/Particles/P_Fire.P_Fire'"));
 
-	DamageComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
+	DamageParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
 	DestroyComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestoryParticle"));
 	OnHitComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnHitParticle"));
+	GunParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("GunParticle"));
 
-	DamageComponent->bAutoActivate = false;
+
+	DamageParticle->bAutoActivate = false;
 	DestroyComponent->bAutoActivate = false;
 	OnHitComponent->bAutoActivate = false;
+	GunParticle->bAutoActivate = false;
 
-	DamageComponent->Template = Damage.Object;
+	GunParticle->Template = GunPart.Object;
+	DamageParticle->Template = Damage.Object;
 	DestroyComponent->Template = Explosion.Object;
 	OnHitComponent->Template = OnHit.Object;
 
-	DamageComponent->AttachTo(RootComponent);
+	GunParticle->AttachTo(Turret, "FirePoint", EAttachLocation::SnapToTarget);
+	DamageParticle->AttachTo(RootComponent);
 	DestroyComponent->AttachTo(RootComponent);
 	OnHitComponent->AttachTo(RootComponent);
 
@@ -343,11 +349,13 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 void ABatteryNAssaultCharacter::StartFire()
 {
 	Weapon->StartAttack();
+	GunParticle->ActivateSystem();
 }
 
 void ABatteryNAssaultCharacter::StopFire()
 {
 	Weapon->EndAttack();
+	GunParticle->DeactivateSystem();
 }
 
 void ABatteryNAssaultCharacter::PowerUp()
@@ -393,9 +401,21 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
 
-	if (Health <= MaxHealth / 2)
+	if (Health < 75 )
 	{
-		DamageComponent->ActivateSystem();
+		this->DamageParticle->ActivateSystem();
+	}
+	if (Health < 50)
+	{
+		this->DestroyComponent->ActivateSystem();
+	}
+	else if (Health > 50)
+	{
+		this->DestroyComponent->DeactivateSystem();
+	}
+	else if (Health > 75)
+	{
+		this->DamageParticle->DeactivateSystem();
 	}
 
 
@@ -405,7 +425,7 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	{
 		if (damageDealer->TeamID != this->TeamID)
 		{	
-			damageDealer->OnHitComponent->ActivateSystem();
+			this->OnHitComponent->ActivateSystem();
 			Health -= 5;
 		}
 	}

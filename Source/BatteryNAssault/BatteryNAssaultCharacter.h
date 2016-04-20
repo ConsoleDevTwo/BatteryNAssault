@@ -157,7 +157,10 @@ public:
 	bool bInEnemySight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
-	class UParticleSystemComponent* DamageComponent;
+	class UParticleSystemComponent* DamageParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
+	class UParticleSystemComponent* GunParticle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = render)
 	class UParticleSystemComponent* DestroyComponent;
