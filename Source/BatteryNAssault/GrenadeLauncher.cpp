@@ -42,11 +42,14 @@ void AGrenadeLauncher::EndAttack()
 		//GetWorld()->SpawnActor<AGrenade>(ProjectileClass, Mesh->GetSocketLocation("Muzzle"), Instigator->GetActorRotation(), SpawnParameters);
 		//TimeLeft = TimeBetweenShots;
 
+		FRotator rotation = this->GetActorRotation();
+		FVector location = GetActorLocation();
+
 		SpawnParameters.Instigator = Character;
 		GetWorld()->SpawnActor<AGrenade>(
 			ProjectileClass,
-			GetActorLocation(),
-			Instigator->GetActorRotation(),
+			location, //GetActorLocation(),
+			rotation, //Instigator->GetActorRotation(),
 			SpawnParameters);
 	}
 

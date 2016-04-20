@@ -25,6 +25,9 @@ void AMachineGun::Attack()
 
 	FActorSpawnParameters SpawnParameters;
 
+	FRotator rotation = this->GetActorRotation();
+	FVector location = GetActorLocation();
+
 	ABatteryNAssaultCharacter* Character = Cast<ABatteryNAssaultCharacter>(Instigator);
 
 	if (Character)
@@ -32,8 +35,8 @@ void AMachineGun::Attack()
 		SpawnParameters.Instigator = Character;
 		GetWorld()->SpawnActor<AMyProjectile>(
 			ProjectileClass,
-			GetActorLocation(), 
-			Instigator->GetActorRotation(), 
+			location, //GetActorLocation(),
+			rotation, //Instigator->GetActorRotation(),
 			SpawnParameters);
 		if (FiringSound)
 		{
