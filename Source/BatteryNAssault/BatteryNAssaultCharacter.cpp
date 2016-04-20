@@ -18,7 +18,7 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 		ConstructorHelpers::FObjectFinder<UClass> GrenadeLauncher;
 
 		//FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")) {}
-		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
+		FConstructorStatics() : MachineGun(TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'")),
 								Shotgun(TEXT("Class'/Game/Weapon/ProjectileWeapons/RocketLauncher/RocketLauncher.RocketLauncher_C'")),
 								GrenadeLauncher(TEXT("Class'/Game/Weapon/ProjectileWeapons/GrenadeLauncher/GrenadeLauncher.GrenadeLauncher_C'")) {}
 	};
