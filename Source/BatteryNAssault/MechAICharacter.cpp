@@ -152,7 +152,7 @@ void AMechAICharacter::RotateTower(float DeltaTime)
 	//	Turret->SetWorldRotation(currentCameraRotation);
 	}
 
-	if (TowerRotation.Yaw + 2.0f < rot.Yaw || TowerRotation.Yaw - 2.0f > rot.Yaw)
+	if (TowerRotation.Yaw +10.0f < rot.Yaw || TowerRotation.Yaw - 10.0f > rot.Yaw)
 	{
 		// If the bool is true, set it to false
 		if (bIsAtLookDirection)

@@ -166,9 +166,6 @@ void ABatteryNAssaultCharacter::ChangeWeapon(int32 ind)
 {
 	if (WeaponInd == ind) return;
 
-	FString Message = FString::Printf(TEXT("Changed Weapon ID: %d"), ind);
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
-	
 	if (ind == 0) // Machine Gun
 	{
 		Gun = GunTypes[0];
@@ -222,8 +219,6 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 		PossessNewMech();
 	}
 
-	FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
-	GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::White, Message);
 	const FRotator ActorRot = GetActorRotation();
 	const FRotator BaseRotation(0, CameraBoom->GetComponentRotation().Yaw - ActorRot.Yaw, 0);
 	const FRotator TurretRotation(-CameraBoom->GetComponentRotation().Pitch - ActorRot.Pitch, CameraBoom->GetComponentRotation().Yaw-180, 0);
@@ -329,16 +324,13 @@ void ABatteryNAssaultCharacter::MoveRight(float Value)
 
 	if (HasAuthority())
 	{
-		FString Message = "Move Riight";
 //		FString Message = FString::Printf(TEXT("Energy: %.2f"), Energy);
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
 	}
 	/*
 	else
 	{
 
 		FString Message = FString::Printf( TEXT("%.2f"), Value);
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Message);
 	}*/
 
 	//AddControllerYawInput(Value * GetWorld()->GetDeltaSeconds());
@@ -396,8 +388,6 @@ void ABatteryNAssaultCharacter::Recharge(float charge)
 	//Energy += charge;
 	Energy = FMath::Clamp(Energy + charge, 0.0f, MaxEnergy);
 
-	FString Message = FString::Printf(TEXT("Charging"));
-	GEngine->AddOnScreenDebugMessage(4, 0.1f, FColor::White, Message);
 }
 
 float ABatteryNAssaultCharacter::GetEnergy()
@@ -411,7 +401,6 @@ float ABatteryNAssaultCharacter::TakeDamage(
 	class AController* EventInstigator,
 	class AActor* DamageCauser)
 {
-	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Yellow, TEXT("destroy"));
 	//Destroy();
 
 	if (Health < 75 )

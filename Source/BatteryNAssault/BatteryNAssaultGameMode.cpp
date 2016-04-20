@@ -65,16 +65,6 @@ void ABatteryNAssaultGameMode::Tick(float DeltaSeconds)
 		if(mech)
 		{
 			mech->bGameIsOver = true;
-			if (mech->TeamID == Winner)
-			{
-				FString Message = "GameOver - Winner";
-				GEngine->AddOnScreenDebugMessage(1, 0.1f, FColor::White, Message);
-			}
-			else
-			{
-				FString Message = "GameOver - Loser";
-				GEngine->AddOnScreenDebugMessage(1, 0.1f, FColor::White, Message);
-			}
 		}
 	}
 }
