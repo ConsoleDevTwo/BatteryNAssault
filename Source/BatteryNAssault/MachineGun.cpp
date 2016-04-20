@@ -5,9 +5,6 @@
 #include "BatteryNAssaultCharacter.h"
 #include "MachineGun.h"
 
-
-
-
 AMachineGun::AMachineGun()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -40,13 +37,7 @@ void AMachineGun::Attack()
 			SpawnParameters);
 		if (FiringSound)
 		{
-
 			AudioComp = UGameplayStatics::SpawnSoundAttached(FiringSound, this->GetRootComponent());
 		}
 	}
-	
-
-
-
-
 }

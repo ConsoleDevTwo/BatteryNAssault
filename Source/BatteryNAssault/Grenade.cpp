@@ -4,8 +4,6 @@
 #include "GrenadeLauncher.h"
 #include "Grenade.h"
 
-
-
 void AGrenade::OnConstruction(const FTransform & Transform)
 {
 	Super::OnConstruction(Transform);
@@ -15,18 +13,13 @@ void AGrenade::OnConstruction(const FTransform & Transform)
 		MovementComponent->InitialSpeed = GrenadeLauncher->GrenadeSpeed;
 
 	}
-
 }
-
-
 
 void AGrenade::OnBeginOverlap(AActor* OtherActor)
 {
-
-
-
 	if (flame2)
 		UGameplayStatics::SpawnEmitterAtLocation(this, flame2, GetActorLocation());
+
 	UGameplayStatics::ApplyRadialDamage(this, DamageDealt, GetActorLocation(), 250, UDamageType::StaticClass(), TArray<AActor*>(), Instigator, Instigator->GetController(), true);
 	Destroy();
 }

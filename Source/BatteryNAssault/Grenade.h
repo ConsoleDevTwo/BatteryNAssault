@@ -14,25 +14,11 @@ class BATTERYNASSAULT_API AGrenade : public AMyProjectile
 	GENERATED_BODY()
 
 public:
-
-
-
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ParticleSystem)
 		UParticleSystem* flame2;
-
-
 
 protected:
 	void OnBeginOverlap(AActor* OtherActor) override;
 
 	void OnConstruction(const FTransform & Transform) override;
-
-
-
-	
-	
-	
-	
 };

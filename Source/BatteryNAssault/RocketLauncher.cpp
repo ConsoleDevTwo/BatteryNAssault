@@ -60,9 +60,4 @@ void ARocketLauncher::Attack()
 			AudioComp = UGameplayStatics::SpawnSoundAttached(FiringSound, this->GetRootComponent());
 		}
 	}
-
-
-
-
-
 }
