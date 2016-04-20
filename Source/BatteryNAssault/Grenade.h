@@ -20,7 +20,7 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ParticleSystem)
-		UParticleSystem* flame;
+		UParticleSystem* flame2;
 
 
 

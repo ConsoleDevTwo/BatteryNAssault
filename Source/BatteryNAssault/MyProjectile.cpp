@@ -46,6 +46,7 @@ void AMyProjectile::Tick(float DeltaTime)
 }
 void AMyProjectile::OnBeginOverlap(AActor* OtherActor)
 {
+	/*
 	AMyTestTarget *Target = Cast<AMyTestTarget>(OtherActor);
 
 	if (Target)
@@ -65,6 +66,21 @@ void AMyProjectile::OnBeginOverlap(AActor* OtherActor)
 		OtherActor->Destroy();
 		Destroy();
 	}
+	*/
 	//Destroy();
+
+	if (flame)
+		UGameplayStatics::SpawnEmitterAtLocation(this, flame, GetActorLocation());
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		DamageDealt,
+		GetActorLocation(),
+		250,
+		UDamageType::StaticClass(),
+		TArray<AActor*>(),
+		Instigator,
+		Instigator->GetController(),
+		true);
+	Destroy();
 }
 

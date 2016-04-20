@@ -25,8 +25,8 @@ void AGrenade::OnBeginOverlap(AActor* OtherActor)
 
 
 
-	if (flame)
-		UGameplayStatics::SpawnEmitterAtLocation(this, flame, GetActorLocation());
+	if (flame2)
+		UGameplayStatics::SpawnEmitterAtLocation(this, flame2, GetActorLocation());
 	UGameplayStatics::ApplyRadialDamage(this, DamageDealt, GetActorLocation(), 250, UDamageType::StaticClass(), TArray<AActor*>(), Instigator, Instigator->GetController(), true);
 	Destroy();
 }

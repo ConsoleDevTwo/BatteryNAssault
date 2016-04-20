@@ -25,8 +25,8 @@ void ARocket::OnBeginOverlap(AActor* OtherActor)
 
 
 
-	if (flame)
-		UGameplayStatics::SpawnEmitterAtLocation(this, flame, GetActorLocation());
+	//if (flame)
+	//	UGameplayStatics::SpawnEmitterAtLocation(this, flame, GetActorLocation());
 	UGameplayStatics::ApplyRadialDamage(
 		this, 
 		DamageDealt, 
