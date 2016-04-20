@@ -177,6 +177,12 @@ public:
 	UPROPERTY(Category = Guns, EditAnywhere)
 		TArray<TSubclassOf<AWeapon>> GunTypes;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	class UAudioComponent* AudioComp;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		USoundCue* EngineSound;
+
 	//UPROPERTY(EditAnywhere)
 		//ConstructorHelpers::FObjectFinder<UClass> MachineGun = (TEXT("Class'/Game/Weapon/ProjectileWeapons/MachineGun.MachineGun_C'"));
 };

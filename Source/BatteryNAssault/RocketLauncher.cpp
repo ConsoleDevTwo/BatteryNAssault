@@ -17,7 +17,7 @@ ARocketLauncher::ARocketLauncher()
 	Mesh->AttachTo(RootComponent);
 	AttackSpeed = 0.5f;
 	
-	ConstructorHelpers::FObjectFinder<USoundCue> RocketLauncherSound(TEXT("SoundCue'/Game/Sound/Weapon/machine1cue.machine1cue'"));
+	ConstructorHelpers::FObjectFinder<USoundCue> RocketLauncherSound(TEXT("SoundCue'/Game/MAARS/Sounds/S_Shot_Cue.S_Shot_Cue'"));
 	FiringSound = RocketLauncherSound.Object;
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComp"));
 	AudioComp->AttachTo(RootComponent);

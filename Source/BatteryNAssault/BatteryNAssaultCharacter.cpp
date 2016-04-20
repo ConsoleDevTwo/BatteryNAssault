@@ -86,8 +86,8 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> GunPart(TEXT("ParticleSystem'/Game/StarterContent/Particles/P_Fire.P_Fire'"));
 
 	DamageParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DamageParticle"));
-	DestroyComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestoryParticle"));
-	OnHitComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnHitParticle"));
+	DestroyComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestroyComponent"));
+	OnHitComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("OnHitComponent"));
 	GunParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("GunParticle"));
 
 
@@ -105,6 +105,12 @@ ABatteryNAssaultCharacter::ABatteryNAssaultCharacter()
 	DamageParticle->AttachTo(RootComponent);
 	DestroyComponent->AttachTo(RootComponent);
 	OnHitComponent->AttachTo(RootComponent);
+
+	ConstructorHelpers::FObjectFinder<USoundCue> EngineSoundHolder(TEXT("SoundCue'/Game/MAARS/Sounds/S_Engine-loop_Cue.S_Engine-loop_Cue'"));
+	EngineSound = EngineSoundHolder.Object;
+	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComp"));
+	AudioComp->AttachTo(RootComponent);
+	AudioComp->bAutoActivate = false;
 
 	TeamID = 0;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -139,6 +145,12 @@ void ABatteryNAssaultCharacter::BeginPlay()
 	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APowerUp::StaticClass(), powerUpMechs);
 	ChangeRobotColor();
+
+	if (EngineSound)
+	{
+
+		AudioComp = UGameplayStatics::SpawnSoundAttached(EngineSound, this->GetRootComponent());
+	}
 }
 
 void ABatteryNAssaultCharacter::DeathFunc()
@@ -230,6 +242,7 @@ void ABatteryNAssaultCharacter::Tick(float DeltaTime)
 			TowerRotation = currentBaseRotation;
 		}
 	}
+
 	/*
 	if (TowerRotation != BaseRotation)
 	{

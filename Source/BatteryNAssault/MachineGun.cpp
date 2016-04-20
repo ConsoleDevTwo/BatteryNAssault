@@ -15,7 +15,7 @@ AMachineGun::AMachineGun()
 	AttackSpeed = 0.05f;
 	AmmoUsed = 1;
 	
-	ConstructorHelpers::FObjectFinder<USoundCue> MachineGunSound(TEXT("SoundCue'/Game/Sound/Weapon/machine1cue.machine1cue'"));
+	ConstructorHelpers::FObjectFinder<USoundCue> MachineGunSound(TEXT("SoundCue'/Game/MAARS/Sounds/S_Shot_Cue.S_Shot_Cue'"));
 	FiringSound = MachineGunSound.Object;
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComp"));
 	AudioComp->AttachTo(RootComponent);
